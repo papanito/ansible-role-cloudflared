@@ -1,0 +1,24 @@
+---
+# vars file for cloudflared
+
+## base url and cf_binaries names from https://developers.cloudflare.com/argo-tunnel/downloads
+## currently only linux bin, no deb or rpm
+
+cf_binaries:
+  x86_64:
+    filename_tgz: cloudflared-stable-linux-amd64.tgz
+    filename_deb: cloudflared-stable-linux-amd64.deb
+    filename_rpm: cloudflared-stable-linux-amd64.rpm
+  x86:
+    filename_tgz: cloudflared-stable-linux-386.tgz
+    filename_deb: cloudflared-stable-linux-386.deb
+    filename_rpm: cloudflared-stable-linux-386.rpm
+  arm:
+    filename_tgz: cloudflared-stable-linux-arm.tgz
+    filename_deb: cloudflared-stable-linux-arm.deb
+    filename_rpm: cloudflared-stable-linux-arm.rpm
+
+systemd_target_dir: /etc/systemd/system/
+install_target_dir: /usr/bin
+config_dir: /etc/cloudflared
+config_dir_tunnels: "{{ config_dir }}/tunnels"

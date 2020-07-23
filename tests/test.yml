@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  remote_user: root
+  vars:
+    hostname: demo.mycompany.com
+    service_name: demo
+    url: https://localhost:8080
+  roles:
+    - ansible-role-cloudflared

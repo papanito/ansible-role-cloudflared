@@ -1,0 +1,8 @@
+[Unit]
+Description=cloudflared tunnel for {{ service_name }}
+
+[Service]
+Type=simple
+ExecStart=/bin/sh {{ daemon_location }} tunnel --config {{ config_filename }}
+User={{ systemd_user }}
+Group={{ systemd_group }}

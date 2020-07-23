@@ -1,0 +1,23 @@
+- name: Check if file '{{ daemon_location }}' exists
+  stat:
+    path: "{{ daemon_location }}"
+    checksum_algorithm: sha256
+  register: stat_result
+- name: Unarchive {{ download_baseurl }}/{{ cf_binary_filename }} to {{ install_target_dir }}
+  unarchive:
+    src: "{{ download_baseurl }}/{{ cf_binary_filename }}"
+    dest: "{{ install_target_dir }}"
+    remote_src: yes
+  when: not stat_result.stat.exists
+- block:
+  - name: Login to cloudflare using standard way (browser window)
+    command: cloudflared login
+    register: login_result
+  - debug:
+      msg: login_result
+  when: cert_location is not defined
+- block:
+  - name: Copy `cert.pem` from pre-defined location
+    copy:
+      src: "{{ cert_location }}"
+      dest: "{{ config_dir }}"

@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  remote_user: aedu
+  vars:
+    install_only: True
+  roles:
+    - ansible-role-cloudflared

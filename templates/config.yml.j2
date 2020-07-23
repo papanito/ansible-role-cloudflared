@@ -1,0 +1,44 @@
+hostname: {{ hostname }}
+url: {{ url }}
+logfile: /var/log/cloudflared_{{ service_name }}.log
+
+{% if lb_pool is defined %}
+lb-pool: {{ lb_pool }}
+{% endif %}
+
+{% if autoupdate_freq is defined %}
+autoupdate-freq: {{ autoupdate_freq }}
+{% endif %}
+{% if no_autoupdate is defined %}
+no-autoupdate: {{ no_autoupdate }}
+{% endif %}
+{% if no_tls_verify is defined %}
+no-tls-verify: {{ no_tls_verify }}
+{% endif %}
+{% if origin_ca_pool is defined %}
+origin-ca-pool: {{ origin_ca_pool }}
+{% endif %}
+{% if origin_server_name is defined %}
+origin-server-name: {{ origin_server_name }}
+{% endif %}
+{% if metrics is defined %}
+metrics: {{ metrics }}
+{% endif %}
+{% if metrics_update_freq is defined %}
+metrics-update-freq: {{ metrics_update_freq }}
+{% endif %}
+{% if tag is defined %}
+tag: {{ tag }}
+{% endif %}
+{% if loglevel is defined %}
+loglevel: {{ loglevel }}
+{% endif %}
+{% if proto_loglevel is defined %}
+proto-loglevel: {{ proto_loglevel }}
+{% endif %}
+{% if retries is defined %}
+retries: {{ retries }}
+{% endif %}
+{% if no_chunked_encoding is defined %}
+no-chunked-encoding: {{ no_chunked_encoding }}
+{% endif %}

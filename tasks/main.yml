@@ -1,0 +1,11 @@
+---
+# tasks file for cloudflared
+- name: Define required variables
+  set_fact:
+    daemon_location: "{{ install_target_dir }}/cloudflared"
+    cf_binary_filename: "{{ cf_binaries[ansible_machine].filename_tgz }}"
+- name: Download and install cloudflared
+  import_tasks: install.yml
+- name: Install cloudflared
+  import_tasks: configure.yml
+  when: not install_only
