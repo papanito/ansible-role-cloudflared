@@ -41,8 +41,8 @@ jobs:
       run: pip install ansible
     - name: Create ansible.cfg with correct roles_path
       run: printf '[defaults]\nroles_path=../:./' >ansible.cfg
-    # - name: Run ansible syntax-check
-    #   run: ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+    - name: Run ansible syntax-check
+      run: ansible-playbook tests/test.yml -i tests/inventory --syntax-check
   import-role:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
