@@ -1,0 +1,50 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Runs a single command using the runners shell
+    - name: Lint Ansible Playbook
+      # replace "master" with any valid ref
+      uses: ansible/ansible-lint-action@master
+      with:
+        # [required]
+        # Paths to ansible files (i.e., playbooks, tasks, handlers etc..)
+        # or valid Ansible directories according to the Ansible role
+        # directory structure.
+        # If you want to lint multiple ansible files, use the following syntax
+        # targets: |
+        #   playbook_1.yml
+        #   playbook_2.yml
+        targets: "**/*.yml"
+    - name: Install Dependencies
+      run: pip install ansible
+    - name: Create ansible.cfg with correct roles_path
+      run: printf '[defaults]\nroles_path=../:./' >ansible.cfg
+    - name: Run ansible syntax-check
+      run: ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+    - name: Webhook
+      uses: joelwmale/webhook-action@master
+      env:
+        WEBHOOK_URL: https://galaxy.ansible.com/api/v1/notifications/
+        data: ""
