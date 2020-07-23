@@ -1,5 +1,16 @@
 # ansible-role-cloudflared
 
+- [ansible-role-cloudflared](#ansible-role-cloudflared)
+  - [Authenticate the daemon](#authenticate-the-daemon)
+  - [Requirements](#requirements)
+  - [Role Variables](#role-variables)
+    - [General parameters](#general-parameters)
+    - [Cloudflare parameters](#cloudflare-parameters)
+  - [Dependencies](#dependencies)
+  - [Example Playbook](#example-playbook)
+  - [License](#license)
+  - [Author Information](#author-information)
+
 This ansible role does install cloudflared on a server and installs it as a service. The role is made in a way that you can install mutiple services in parallel.
 
 1. Download binard according to [downloads]
@@ -41,6 +52,8 @@ none
 
 ## Role Variables
 
+### General parameters
+
 These are all variables
 
 |Parameter|Description|Default Value|
@@ -49,6 +62,14 @@ These are all variables
 |`systemd_user`|User for systemd service|`backup`|
 |`systemd_group`|Group for systemd service|`backup`|
 |`download_baseurl`|Base url for `cloudflare` binaries|https://bin.equinox.io/c/VdrWdbjqyF/|
+|`cert_location`|Location of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
+
+### Cloudflare parameters
+
+Parameters available for configuring `cloudflared` according to [cli-args]
+
+|Parameter|Description|Default Value|
+|---------|-----------|-------------|
 |`hostname`|[Mandatory] Argotunnel hostname according to [config] e.g. `tunnel.example.com`|-|
 |`url`|[Mandatory] url to which to connect to [config] e.g. `ssh://localhost:22` or `https://localhost:443`|-|
 |`lb_pool`|LoadBalancer pool name - see [docu](https://developers.cloudflare.com/argo-tunnel/reference/arguments/#lb-pool)|-|
@@ -66,16 +87,6 @@ These are all variables
 |`no_chunked_encoding`|Disables chunked transfer encoding; useful if you are running a WSGI server - see [docu](https://developers.cloudflare.com/argo-tunnel/reference/arguments/#no-chunked-encoding)|`false`|
 
 
-## Ansible vault
-
-I recommend to encrypt the 
-
-The variable `backup_encryption_key` has to be created as follows:
-
-```bash
-ansible-vault encrypt_string  'SupersecretPa$$phrase' --name 'backup_encryption_key'
-```
-
 ## Dependencies
 
 none
@@ -84,9 +95,18 @@ none
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- hosts: server
+  vars:
+    hostname: ssh-demo.mycompany
+    service_name: ssh
+    url: ssh://localhost:22
+    systemd_user: root
+    systemd_group: root
+    cert_location: /home/papanito/cert.pem
+  roles:
+    - papanito.cloudflared
+```
 
 ## License
 
