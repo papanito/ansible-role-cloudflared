@@ -1,11 +1,11 @@
 galaxy_info:
   role_name: cloudflared
   author: Adrian Wyssmann
-  description: Ansible role do install cloudlfare argo tunnel
+  description: Ansible role do install and run cloudflare argo tunnel
   company: wyssmann.com
-  issue_tracker_url: https://github.com/papanito/ansible-role-cloudflared
+  issue_tracker_url: https://github.com/papanito/ansible-role-cloudflared/issues
   license: Apache
-  min_ansible_version: 2.9
+  min_ansible_version: 2.7
 
   platforms:
   - name: EL
