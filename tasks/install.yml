@@ -26,3 +26,4 @@
     copy:
       src: "{{ cert_location }}"
       dest: "{{ config_dir }}/{{ cert_name }}"
+  when: cert_location is defined
