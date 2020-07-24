@@ -63,6 +63,7 @@ These are all variables
 |`systemd_group`|Group for systemd service|`backup`|
 |`download_baseurl`|Base url for `cloudflare` binaries|https://bin.equinox.io/c/VdrWdbjqyF/|
 |`cert_location`|Location of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
+|`install_only`|Set to `true` if you only want to install the binard without any configuration or login|`false`|
 
 ### Cloudflare parameters
 
