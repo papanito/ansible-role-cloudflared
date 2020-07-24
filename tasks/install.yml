@@ -9,6 +9,11 @@
     dest: "{{ install_target_dir }}"
     remote_src: yes
   when: not stat_result.stat.exists
+- name: Create {{ config_dir_tunnels }} if it does not exist
+  file:
+    path: "{{ config_dir_tunnels }}"
+    state: directory
+    # mode: '0755'
 - block:
   - name: Login to cloudflare using standard way (browser window)
     command: cloudflared login
@@ -17,7 +22,7 @@
       msg: login_result
   when: cert_location is not defined
 - block:
-  - name: Copy `cert.pem` from pre-defined location
+  - name: Copy `{{ cert_location }}` to {{ config_dir }}/{{ cert_name }}
     copy:
       src: "{{ cert_location }}"
-      dest: "{{ config_dir }}"
+      dest: "{{ config_dir }}/{{ cert_name }}"

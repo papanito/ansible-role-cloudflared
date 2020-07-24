@@ -5,7 +5,6 @@ logfile: /var/log/cloudflared_{{ service_name }}.log
 {% if lb_pool is defined %}
 lb-pool: {{ lb_pool }}
 {% endif %}
-
 {% if autoupdate_freq is defined %}
 autoupdate-freq: {{ autoupdate_freq }}
 {% endif %}

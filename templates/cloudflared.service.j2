@@ -3,6 +3,9 @@ Description=cloudflared tunnel for {{ service_name }}
 
 [Service]
 Type=simple
-ExecStart=/bin/sh {{ daemon_location }} tunnel --config {{ config_filename }}
+ExecStart=cloudflared tunnel --config {{ config_dir_tunnels }}/{{ config_filename }}
 User={{ systemd_user }}
 Group={{ systemd_group }}
+
+[Install]
+After=NetworkManager.service

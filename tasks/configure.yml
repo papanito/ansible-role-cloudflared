@@ -11,8 +11,9 @@
   template:
     src: cloudflared.service.j2
     dest: "{{ systemd_target_dir }}/{{ systemd_filename }}"
-- name: Enable systemd service {{ systemd_filename }}
+- name: Start systemd service {{ systemd_filename }}
   systemd:
     name: "{{ systemd_filename }}"
-    state: started
+    state: restarted
     enabled: yes
+    daemon_reload: yes
