@@ -18,12 +18,10 @@
   - name: Login to cloudflare using standard way (browser window)
     command: cloudflared login
     register: login_result
-  - debug:
-      msg: login_result
-  when: cert_location is not defined
-- block:
+    when: cert_location is not defined
   - name: Copy `{{ cert_location }}` to {{ config_dir }}/{{ cert_name }}
     copy:
       src: "{{ cert_location }}"
       dest: "{{ config_dir }}/{{ cert_name }}"
-  when: cert_location is defined
+    when: cert_location is defined
+  when: not install_only
