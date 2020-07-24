@@ -6,8 +6,6 @@
     cf_binary_filename: "{{ cf_binaries[ansible_machine].filename_tgz }}"
 - name: Download and install cloudflared
   import_tasks: install.yml
-  become: yes
 - name: Install cloudflared
   import_tasks: configure.yml
-  become: yes
   when: not install_only
