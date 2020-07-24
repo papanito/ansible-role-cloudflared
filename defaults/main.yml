@@ -1,7 +1,7 @@
 ---
 # defaults file for cloudflared
-systemd_user: cloudflare
-systemd_group: cludflared
+systemd_user: root
+systemd_group: root
 
 download_baseurl: https://bin.equinox.io/c/VdrWdbjqyF/
 download_folder: ./download
