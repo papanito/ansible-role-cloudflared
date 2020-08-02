@@ -10,7 +10,7 @@ on:
 
 jobs:
   check-version:
-    name: Check version
+    name: Check version bump
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -19,6 +19,7 @@ jobs:
     - shell: bash
       run: chmod u+x ./.github/workflows/check_version.sh && ./.github/workflows/check_version.sh
   build:
+    name: Linting role
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
