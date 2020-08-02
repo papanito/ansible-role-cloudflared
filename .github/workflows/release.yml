@@ -1,9 +1,7 @@
 name: Create release
 
 on:
-  push:
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,16 +19,25 @@ jobs:
       run: printf '[defaults]\nroles_path=../:./' >ansible.cfg
     - name: Run ansible syntax-check
       run: ansible-playbook tests/test.yml -i tests/inventory --syntax-check
-  create-release:
-    name: Create Release
+  prepare-release:
+    name: Prepare Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install auto-changelog
         run: npm install -g auto-changelog
+      - name: Get current version
+        run: VERSION=`cat ./VERSION`
       - name: Create changelog
         run:  auto-changelog --ignore-commit-pattern "\[ci|docu|meta\]|fixup" --starting-version $(git describe --tags `git rev-list --tags --max-count=1`) --hide-credit -o RELEASENOTES.md
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
