@@ -1,4 +1,4 @@
-name: CI
+name: master and pr builds
 on:
   push:
     branches: 
@@ -9,17 +9,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-version:
-    name: Check version bump
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - shell: bash
-      run: chmod u+x ./.github/workflows/check_version.sh && ./.github/workflows/check_version.sh
   build:
-    name: Linting role
+    name: Ansible lint
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
