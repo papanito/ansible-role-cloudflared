@@ -61,7 +61,7 @@ jobs:
       - name: Install auto-changelog
         run: sudo npm install -g auto-changelog
       - name: Create release notes
-        run:  auto-changelog --ignore-commit-pattern "\[ci|docu|meta\]|fixup" --starting-version $(git describe --tags `git rev-list --tags --max-count=1`) --hide-credit -o RELEASENOTES.md
+        run: auto-changelog --ignore-commit-pattern "\[ci|docu|meta\]|fixup" --starting-version $RELEASE_VERSION --hide-credit -o RELEASENOTES.md
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
