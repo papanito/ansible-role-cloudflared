@@ -1,0 +1,86 @@
+name: Create release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    name: Ansible linting
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Lint Ansible Playbook
+      uses: ansible/ansible-lint-action@master
+      with:
+        targets: "**/*.yml"
+    - name: Install Dependencies
+      run: pip install ansible
+    - name: Create ansible.cfg with correct roles_path
+      run: printf '[defaults]\nroles_path=../:./' >ansible.cfg
+    - name: Run ansible syntax-check
+      run: ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+
+  prepare-release:
+    name: Prepare Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env
+        run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/*/}
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+      - name: Create release branch
+        run: git checkout -b release/$RELEASE_VERSION &&  git push --set-upstream origin release/$RELEASE_VERSION
+      - name: Install auto-changelog
+        run: sudo npm install -g auto-changelog
+      - name: Set current version
+        run: echo $RELEASE_VERSION > ./VERSION
+      - name: Create changelog
+        run: auto-changelog --ignore-commit-pattern "\[ci|docu|meta\]|fixup"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "[meta] Update changelog, bump version"
+          file_pattern: ./VERSION ./CHANGELOG.md
+          commit_user_name: My GitHub Actions Bot
+          commit_user_email: ci@wyssmann.com
+          commit_author: Papanito <papanito@wyssmann.com>
+          push_options: --force
+
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env
+        run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/*/}
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install auto-changelog
+        run: sudo npm install -g auto-changelog
+      - name: Create release notes
+        run:  auto-changelog --ignore-commit-pattern "\[ci|docu|meta\]|fixup" --starting-version $(git describe --tags `git rev-list --tags --max-count=1`) --hide-credit -o RELEASENOTES.md
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: $RELEASE_VERSION
+          release_name: Release $RELEASE_VERSION
+          body_path: ./RELEASENOTES.md
+          draft: false
+          prerelease: false
+    needs: 
+    - build
+    - prepare-release
+
+  import-role:
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps: 
+    - uses: 0x022b/galaxy-role-import-action@v1
+      with:
+        galaxy_api_key: ${{ secrets.ansible_galaxy_apikey }}
