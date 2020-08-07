@@ -70,6 +70,7 @@ These are all variables
 |`download_baseurl`|Base url for `cloudflare` binaries|https://bin.equinox.io/c/VdrWdbjqyF/|
 |`cert_location`|Location of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
 |`install_only`|Set to `true` if you only want to install the binary without any configuration or login|`false`|
+|`force_install`|Set to `true` if you want to re-install `cloudflared`. By default the assumption is that `cloudflared` is running as a service and automatically auto-updates.|`false`|
 
 ### Cloudflare parameters
 

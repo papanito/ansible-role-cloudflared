@@ -8,7 +8,7 @@
     src: "{{ download_baseurl }}/{{ cf_binary_filename }}"
     dest: "{{ install_target_dir }}"
     remote_src: yes
-  when: not stat_result.stat.exists
+  when: not stat_result.stat.exists or force_install
 - name: Create {{ config_dir_tunnels }} if it does not exist
   file:
     path: "{{ config_dir_tunnels }}"
