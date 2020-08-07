@@ -1,0 +1,21 @@
+- name: Define required variables for cleanup
+  set_fact:
+    daemon_location: "{{ install_target_dir }}/cloudflared"
+    tunnel_name: "{{ item.key }}"
+    config_filename_legacy: "config.{{ item.key }}.yml"
+    systemd_filename_legacy: "cloudflared-{{ item.key }}.service"
+- name: Stop systemd service {{ systemd_filename_legacy }}
+  systemd:
+    name: "{{ systemd_filename_legacy }}"
+    state: stopped
+    enabled: no
+    daemon_reload: yes
+  ignore_errors: true
+- name: Remove legacy config files
+  file:
+    path: "{{ config_dir_tunnels }}/{{ config_filename_legacy }}"
+    state: absent
+- name: Remove legacy cloudflared service files
+  file:
+    path: "{{ systemd_target_dir }}/{{ systemd_filename_legacy }}"
+    state: absent

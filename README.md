@@ -12,28 +12,28 @@
 
 This ansible role does download and install `cloudflared` on the host and optionally installs the [argo-tunnel] as a service. 
 
-The role is made in a way that you can install multiple services in parallel - simply run the role several times with different parameters `service_name`, `hostname` and `url`.
+The role is made in a way that you can install multiple services in parallel - simply run the role several times with different parameters `service`, `hostname` and `url`.
 
 The role performs the following steps:
 
 1. Download and install binary according to [downloads]
-2. Install/configure the daemon - see [Authenticate the daemon](#authenticate-the-daemon)
-3. Create a config file per `service_name` in `/etc/cloudflare`
+1. Install/configure the daemon - see [Authenticate the daemon](#authenticate-the-daemon)
+1. Create a config file per `service` in `/etc/cloudflare`
 
-    The file is named `cloudflared_{{ service_name }}.yml` and will contain the minimal configuration is as follows
+    The file is named `{{ tunnel }}.yml` and will contain the minimal configuration is as follows
 
     ```yaml
     hostname: {{ hostname }}
     url: {{ url }}
-    logfile: /var/log/cloudflared_{{ service_name }}.log
+    logfile: /var/log/cloudflared_{{ tunnel }}.log
     ```
 
     Additional parameters are configured via [Cloudflare parameters](#cloudflare-parameters)
 
-4. Create a systemd `service`-file and starts it
+1. Create a [systemd-unit-template] `cloudflared@{{ tunnel }}.service` and start an instance for each service in the list of `tunnels`
 
     ```bash
-    cloudflared tunnel --config cloudflared_{{ service_name }}.yml
+    cloudflared tunnel --config {{ tunnel }}.yml
     ```
 
 ## Authenticate the daemon
@@ -64,17 +64,25 @@ These are all variables
 
 |Parameter|Description|Default Value|
 |---------|-----------|-------------|
-|`service_name`|[Mandatory] Name of the service - used to create config file and systemd file|-|
 |`systemd_user`|User for systemd service|`backup`|
 |`systemd_group`|Group for systemd service|`backup`|
 |`download_baseurl`|Base url for `cloudflare` binaries|https://bin.equinox.io/c/VdrWdbjqyF/|
 |`cert_location`|Location of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
 |`install_only`|Set to `true` if you only want to install the binary without any configuration or login|`false`|
 |`force_install`|Set to `true` if you want to re-install `cloudflared`. By default the assumption is that `cloudflared` is running as a service and automatically auto-updates.|`false`|
+|`tunnels`|[Mandatory] List of services, each one defining [Cloudflare parameters](#cloudflare-parameters)|-|
+|`do_legacy_cleanup`|Due to the changes of switching to [systemd-unit-template] you may need to cleanup the "legacy" stuff, if you used the role before.|`false`|
 
 ### Cloudflare parameters
 
-Parameters available for configuring `cloudflared` according to [cli-args]
+Tunnel-specific parameters available for configuring `cloudflared` according to [cli-args].
+
+```yaml
+tunnels:
+  ssh:
+    hostname: xxx
+    url: ssh.mycompany.com
+```
 
 |Parameter|Description|Default Value|
 |---------|-----------|-------------|
@@ -107,11 +115,12 @@ The following example installs an ssh-tunnel for each `server`
 - hosts: server
   vars:
     hostname: "{{ inventory_hostname }}.mycompany.com"
-    service_name: ssh
-    url: ssh://localhost:22
-    systemd_user: root
-    systemd_group: root
-    cert_location: /home/papanito/cert.pem
+    services:
+      ssh:
+        url: ssh://localhost:22
+        systemd_user: root
+        systemd_group: root
+        cert_location: /home/papanito/cert.pem
   roles:
     - papanito.cloudflared
 ```
@@ -141,3 +150,4 @@ Written by [Papanito](https://wyssmann.com) - [Gitlab](https://gitlab.com/papani
 [config]: https://developers.cloudflare.com/argo-tunnel/reference/config/
 [cli-args]: https://developers.cloudflare.com/argo-tunnel/reference/arguments/
 [authenticate-the-cloudflare-daemon]: https://developers.cloudflare.com/access/ssh/ssh-guide/#2-authenticate-the-cloudflare-daemon
+[systemd-unit-template]: https://fedoramagazine.org/systemd-template-unit-files/

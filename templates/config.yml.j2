@@ -1,43 +1,43 @@
-hostname: {{ hostname }}
-url: {{ url }}
-logfile: /var/log/cloudflared_{{ service_name }}.log
+hostname: {{ item.value.hostname }}
+url: {{ item.value.url }}
+logfile: /var/log/cloudflared_{{ item.key }}.log
 
-{% if lb_pool is defined %}
-lb-pool: {{ lb_pool }}
+{% if item.value.lb_pool is defined %}
+lb-pool: {{ item.value.lb_pool }}
 {% endif %}
-{% if autoupdate_freq is defined %}
-autoupdate-freq: {{ autoupdate_freq }}
+{% if item.value.autoupdate_freq is defined %}
+autoupdate-freq: {{ item.value.autoupdate_freq }}
 {% endif %}
-{% if no_autoupdate is defined %}
-no-autoupdate: {{ no_autoupdate }}
+{% if item.value.no_autoupdate is defined %}
+no-autoupdate: {{ item.value.no_autoupdate }}
 {% endif %}
-{% if no_tls_verify is defined %}
-no-tls-verify: {{ no_tls_verify }}
+{% if item.value.no_tls_verify is defined %}
+no-tls-verify: {{ item.value.no_tls_verify }}
 {% endif %}
-{% if origin_ca_pool is defined %}
-origin-ca-pool: {{ origin_ca_pool }}
+{% if item.value.origin_ca_pool is defined %}
+origin-ca-pool: {{ item.value.origin_ca_pool }}
 {% endif %}
-{% if origin_server_name is defined %}
-origin-server-name: {{ origin_server_name }}
+{% if item.value.origin_server_name is defined %}
+origin-server-name: {{ item.value.origin_server_name }}
 {% endif %}
-{% if metrics is defined %}
-metrics: {{ metrics }}
+{% if item.value.metrics is defined %}
+metrics: {{ item.value.metrics }}
 {% endif %}
-{% if metrics_update_freq is defined %}
-metrics-update-freq: {{ metrics_update_freq }}
+{% if item.value.metrics_update_freq is defined %}
+metrics-update-freq: {{ item.value.metrics_update_freq }}
 {% endif %}
-{% if tag is defined %}
-tag: {{ tag }}
+{% if item.value.tag is defined %}
+tag: {{ item.value.tag }}
 {% endif %}
-{% if loglevel is defined %}
-loglevel: {{ loglevel }}
+{% if item.value.loglevel is defined %}
+loglevel: {{ item.value.loglevel }}
 {% endif %}
-{% if proto_loglevel is defined %}
-proto-loglevel: {{ proto_loglevel }}
+{% if item.value.proto_loglevel is defined %}
+proto-loglevel: {{ item.value.proto_loglevel }}
 {% endif %}
-{% if retries is defined %}
-retries: {{ retries }}
+{% if item.value.retries is defined %}
+retries: {{ item.value.retries }}
 {% endif %}
-{% if no_chunked_encoding is defined %}
-no-chunked-encoding: {{ no_chunked_encoding }}
+{% if item.value.no_chunked_encoding is defined %}
+no-chunked-encoding: {{ item.value.no_chunked_encoding }}
 {% endif %}
