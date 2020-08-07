@@ -6,3 +6,4 @@ systemd_group: root
 download_baseurl: https://bin.equinox.io/c/VdrWdbjqyF/
 download_folder: ./download
 install_only: False
+force_install: False
