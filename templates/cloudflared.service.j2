@@ -1,11 +1,12 @@
 [Unit]
-Description=cloudflared tunnel for {{ service_name }}
+Description=cloudflared tunnel for %I
+After=network.target
 
 [Service]
 Type=simple
-ExecStart=cloudflared tunnel --config {{ config_dir_tunnels }}/{{ config_filename }}
+ExecStart=cloudflared tunnel --config {{ config_dir_tunnels }}/%i.yml
 User={{ systemd_user }}
 Group={{ systemd_group }}
 
 [Install]
-After=NetworkManager.service
+WantedBy=multi-user.target

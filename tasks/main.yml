@@ -4,8 +4,15 @@
   set_fact:
     daemon_location: "{{ install_target_dir }}/cloudflared"
     cf_binary_filename: "{{ cf_binaries[ansible_machine].filename_tgz }}"
+- name: Cleanup legacy stuff
+  include_tasks: cleanup.yml
+  with_dict: "{{ tunnels }}"
+  when: do_legacy_cleanup
 - name: Download and install cloudflared
-  import_tasks: install.yml
+  include_tasks: install.yml
 - name: Install cloudflared
-  import_tasks: configure.yml
+  include_tasks: configure.yml
+  when: not install_only
+- name: Configure tunnels
+  include_tasks: configure-tunnels.yml
   when: not install_only

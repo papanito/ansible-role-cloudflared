@@ -1,19 +1,8 @@
 - name: Define required variables for configuration
   set_fact:
     daemon_location: "{{ install_target_dir }}/cloudflared"
-    config_filename: "config.{{ service_name }}.yml"
-    systemd_filename: "cloudflared-{{ service_name }}.service"
-- name: Create config file for service '{{ service_name }}'
-  template:
-    src: config.yml.j2
-    dest: "{{ config_dir_tunnels }}/{{ config_filename }}"
-- name: Install cloudflared service for service '{{ service_name }}''
+    systemd_filename: "cloudflared"
+- name: Install cloudflared service for service '{{ tunnel_name }}''
   template:
     src: cloudflared.service.j2
-    dest: "{{ systemd_target_dir }}/{{ systemd_filename }}"
-- name: Start systemd service {{ systemd_filename }}
-  systemd:
-    name: "{{ systemd_filename }}"
-    state: restarted
-    enabled: yes
-    daemon_reload: yes
+    dest: "{{ systemd_target_dir }}/{{ systemd_filename }}@.service"
