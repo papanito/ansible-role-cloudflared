@@ -23,3 +23,5 @@ install_target_dir: /usr/bin
 config_dir: /etc/cloudflared
 config_dir_tunnels: "{{ config_dir }}"
 cert_name: cert.pem
+
+ssh_config_file: "~/.ssh/config"

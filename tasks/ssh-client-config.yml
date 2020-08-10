@@ -1,0 +1,13 @@
+## https://developers.cloudflare.com/access/ssh/ssh-guide/#2-authenticate-the-cloudflare-daemon
+## Host [your hostname]
+##   ProxyCommand /usr/local/bin/cloudflared access ssh --hostname %h
+
+- name: Check if {{ item }} is added to local ssh config
+  shell: grep -c "^Host {{ item }}." {{ ssh_config_file }} || true
+  register: test_grep
+
+- name: Add proxy config for {{ item }} is added to local ssh config
+  lineinfile:
+    dest: "{{ ssh_config_file }}"
+    line: "Host {{ item }}.{{ external_domain }}\n   ProxyCommand /usr/bin/cloudflared access ssh --hostname %h"
+  when: test_grep.stdout == "0"

@@ -8,3 +8,5 @@ download_folder: ./download
 install_only: False
 force_install: False
 do_legacy_cleanup: False
+ssh_client_config: False
+ssh_client_config_group: ""
