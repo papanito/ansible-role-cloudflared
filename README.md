@@ -5,6 +5,7 @@
 - [Role Variables](#role-variables)
   - [General parameters](#general-parameters)
   - [Cloudflare parameters](#cloudflare-parameters)
+  - [SSH Client config](#ssh-client-config)
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
 - [License](#license)
@@ -69,6 +70,8 @@ These are all variables
 |`download_baseurl`|Base url for `cloudflare` binaries|https://bin.equinox.io/c/VdrWdbjqyF/|
 |`cert_location`|Location of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
 |`install_only`|Set to `true` if you only want to install the binary without any configuration or login|`false`|
+|`ssh_client_config`|Set to `true` if you want to configure the proxy configuration for your [ssh-guide-client], see [SSH Client config](#ssh-client-config)|`false`|
+|`ssh_client_config_group`|Name of the inventory group for which the ssh proxy config shall be created, see [SSH Client config](#ssh-client-config)|``|
 |`force_install`|Set to `true` if you want to re-install `cloudflared`. By default the assumption is that `cloudflared` is running as a service and automatically auto-updates.|`false`|
 |`tunnels`|[Mandatory] List of services, each one defining [Cloudflare parameters](#cloudflare-parameters)|-|
 |`do_legacy_cleanup`|Due to the changes of switching to [systemd-unit-template] you may need to cleanup the "legacy" stuff, if you used the role before.|`false`|
@@ -102,6 +105,27 @@ tunnels:
 |`retries`|Maximum number of retries for connection/protocol errors. Retries use exponential backoff (retrying at 1, 2, 4, 8, 16 seconds by default) so increasing this value significantly is not recommended - see [docu](https://developers.cloudflare.com/argo-tunnel/reference/arguments/#retries)|`5`|
 |`no_chunked_encoding`|Disables chunked transfer encoding; useful if you are running a WSGI server - see [docu](https://developers.cloudflare.com/argo-tunnel/reference/arguments/#no-chunked-encoding)|`false`|
 
+### SSH Client config
+
+From where you access your nodes via ssh which is proxied by cloudflared, you need to follow [ssh-guide-client]. You have to add the following
+
+```yml
+Host xxx.mycompany.com
+  ProxyCommand /usr/bin/cloudflared access ssh --hostname %h
+```
+
+You can achieve this configuration if you enable `ssh_client_config`. In addition you also need to specify `ssh_client_config_group`. So let's assume your inventory looks as follows:
+
+```yml
+all:
+  children:
+    servers:
+      hosts:
+        host001:
+        host002:
+```
+
+If you specify `ssh_client_config_group` = `servers` you would get an entry for `host001` and `host002`.
 
 ## Dependencies
 
@@ -112,26 +136,29 @@ none
 The following example installs an ssh-tunnel for each `server`
 
 ```yaml
-- hosts: server
+- hosts: servers
   vars:
-    hostname: "{{ inventory_hostname }}.mycompany.com"
+    systemd_user: root
+    systemd_group: root
+    cert_location: /home/papanito/cert.pem
     services:
       ssh:
+        hostname: "{{ inventory_hostname }}.mycompany.com"
         url: ssh://localhost:22
-        systemd_user: root
-        systemd_group: root
-        cert_location: /home/papanito/cert.pem
   roles:
     - papanito.cloudflared
 ```
 
-The following example simply downloads `cloudflared` on your local machine
+The following example simply downloads `cloudflared` on your local machine and configures the ssh-config file:
 
 ```yaml
 - hosts: localhost
   remote_user: papanito #your local user who has admin
   vars:
     install_only: True
+    ssh_client_config: True
+    ssh_client_config_group: servers
+    external_domain: mycompany.com
   roles:
     - papanito.cloudflared
 ```
@@ -147,7 +174,8 @@ Written by [Papanito](https://wyssmann.com) - [Gitlab](https://gitlab.com/papani
 [argo-tunnel]: https://developers.cloudflare.com/argo-tunnel
 [downloads]: https://developers.cloudflare.com/argo-tunnel/downloads
 [ssh-guide]: https://developers.cloudflare.com/access/ssh/ssh-guide/
+[ssh-guide-client]: https://developers.cloudflare.com/access/ssh/ssh-guide/#2-authenticate-the-cloudflare-daemon
 [config]: https://developers.cloudflare.com/argo-tunnel/reference/config/
 [cli-args]: https://developers.cloudflare.com/argo-tunnel/reference/arguments/
 [authenticate-the-cloudflare-daemon]: https://developers.cloudflare.com/access/ssh/ssh-guide/#2-authenticate-the-cloudflare-daemon
-[systemd-unit-template]: https://fedoramagazine.org/systemd-template-unit-files/
+[systemd-unit-template]: https://fedoramagazine.org/systemd-template-unit-files/ssh-guide-client

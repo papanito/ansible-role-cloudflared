@@ -1,2 +1,8 @@
 localhost:
   ansible_connection: local
+all:
+  children:
+    servers:
+      hosts:
+        host001:
+        host002:
