@@ -2,6 +2,11 @@
 ## Host [your hostname]
 ##   ProxyCommand /usr/local/bin/cloudflared access ssh --hostname %h
 
+- name: Create file {{ ssh_config_file }} if it does not exists
+  file:
+    path: "{{ ssh_config_file }}"
+    state: touch
+
 - name: Check if {{ item }} is added to local ssh config
   shell: grep -c "^Host {{ item }}." {{ ssh_config_file }} || true
   register: test_grep
