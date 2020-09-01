@@ -8,5 +8,8 @@ ExecStart=cloudflared tunnel --config {{ config_dir_tunnels }}/%i.yml
 User={{ systemd_user }}
 Group={{ systemd_group }}
 
+Restart=on-failure
+RestartSec=5s
+
 [Install]
 WantedBy=multi-user.target
