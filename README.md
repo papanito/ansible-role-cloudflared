@@ -44,7 +44,7 @@ The role performs the following steps:
 According to [authenticate-the-cloudflare-daemon] when authenticate the daemon, there is a browser window opened or - if this is not possible - then the link has to be put manually. During this time the daemon waits. I could not come up with a solution how to automate this behavior so I came up with the following implementation.
 
 - if nothing is specified, then ansible calls the `cloudflared login` and will continue when the authentication is done - this makes sens if you use the role to install the daemon locally on your machine and where you have a browser window
-- if `cert_location` the certificate is actually copied from the `cert_location`. So you could login once to cloudflare from your master node (where you run ansible) or from a remote location.
+- if `cert_location` the certificate is actually copied from the `cert_location`, or if `cert_content` is defined then the certificate is created directly from the value stored in it. So you could login once to cloudflare from your master node (where you run ansible) or from a remote location.
 
    You can encrypt the `cert.pem` with ansible vault and store it somewhere save.
 
@@ -71,6 +71,7 @@ These are all variables
 |`systemd_group`|Group for systemd service|`backup`|
 |`download_baseurl`|Base url for `cloudflare` binaries|https://bin.equinox.io/c/VdrWdbjqyF/|
 |`cert_location`|Location of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
+|`cert_content`|Content of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
 |`install_only`|Set to `true` if you only want to install the binary without any configuration or login|`false`|
 |`ssh_client_config`|Set to `true` if you want to configure the proxy configuration for your [ssh-guide-client], see [SSH Client config](#ssh-client-config)|`false`|
 |`ssh_client_config_group`|Name of the inventory group for which the ssh proxy config shall be created, see [SSH Client config](#ssh-client-config)|``|
