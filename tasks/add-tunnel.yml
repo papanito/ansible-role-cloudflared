@@ -9,4 +9,4 @@
     state: restarted
     enabled: yes
     no_block: no
-  when: tunnel_template.changed
+  when: service_template.changed or tunnel_template.changed
