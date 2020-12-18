@@ -1,3 +1,12 @@
+- name: Find current tunnel config files
+  find:
+    paths: "{{ config_dir_tunnels }}"
+    patterns: '*.yml'
+  register: tunnel_configs
+- name: Remove unmanaged tunnels
+  include_tasks: remove-tunnel.yml
+  loop: "{{ tunnel_configs.files | map(attribute='path') | map('basename') | map('splitext') | map('first') }}"
+  when: remove_unmanaged_tunnels and (item not in tunnels)
 - name: Create config file for service '{{ item.key }}'
   template:
     src: config.yml.j2

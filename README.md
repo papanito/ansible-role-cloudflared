@@ -1,6 +1,6 @@
 # Ansible role "papanito.cloudflared" <!-- omit in toc -->
 
-![Ansible Role](https://img.shields.io/ansible/role/49833) ![Ansible Quality Score](https://img.shields.io/ansible/quality/49833) ![Ansible Role](https://img.shields.io/ansible/role/d/49833) ![GitHub issues](https://img.shields.io/github/issues/papanito/ansible-role-cloudflared) ![GitHub pull requests](https://img.shields.io/github/issues-pr/papanito/ansible-role-cloudflared) 
+![Ansible Role](https://img.shields.io/ansible/role/49833) ![Ansible Quality Score](https://img.shields.io/ansible/quality/49833) ![Ansible Role](https://img.shields.io/ansible/role/d/49833) ![GitHub issues](https://img.shields.io/github/issues/papanito/ansible-role-cloudflared) ![GitHub pull requests](https://img.shields.io/github/issues-pr/papanito/ansible-role-cloudflared)
 
 - [Authenticate the daemon](#authenticate-the-daemon)
 - [Requirements](#requirements)
@@ -13,7 +13,7 @@
 - [License](#license)
 - [Author Information](#author-information)
 
-This ansible role does download and install `cloudflared` on the host and optionally installs the [argo-tunnel] as a service. 
+This ansible role does download and install `cloudflared` on the host and optionally installs the [argo-tunnel] as a service.
 
 The role is made in a way that you can install multiple services in parallel - simply run the role several times with different parameters `service`, `hostname` and `url`.
 
@@ -77,6 +77,7 @@ These are all variables
 |`force_install`|Set to `true` if you want to re-install `cloudflared`. By default the assumption is that `cloudflared` is running as a service and automatically auto-updates.|`false`|
 |`tunnels`|[Mandatory] List of services, each one defining [Cloudflare parameters](#cloudflare-parameters)|-|
 |`do_legacy_cleanup`|Due to the changes of switching to [systemd-unit-template] you may need to cleanup the "legacy" stuff, if you used the role before.|`false`|
+|`remove_unmanaged_tunnels`|Remove services and configurations for tunnels not defined in `tunnels`|`true`|
 
 ### Cloudflare parameters
 

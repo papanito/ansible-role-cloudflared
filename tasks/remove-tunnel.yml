@@ -1,0 +1,9 @@
+- name: Disable service for unmanaged tunnel
+  systemd:
+    name: "{{ systemd_filename }}@{{ item }}"
+    enabled: no
+    state: stopped
+- name: Remove configuration for unmanaged tunnel
+  file:
+    path: "{{ config_dir_tunnels }}/{{ item }}.yml"
+    state: absent
