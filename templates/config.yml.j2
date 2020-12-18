@@ -1,7 +1,9 @@
 hostname: {{ item.value.hostname }}
 url: {{ item.value.url }}
-logfile: /var/log/cloudflared_{{ item.key }}.log
 
+{% if not (item.value.no_logfile | default(False)) %}
+logfile: /var/log/cloudflared_{{ item.key }}.log
+{% endif %}
 {% if item.value.lb_pool is defined %}
 lb-pool: {{ item.value.lb_pool }}
 {% endif %}
