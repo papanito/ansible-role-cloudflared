@@ -2,3 +2,9 @@
   template:
     src: cloudflared.service.j2
     dest: "{{ systemd_target_dir }}/{{ systemd_filename }}@.service"
+  register: service_template
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+    no_block: no
+  when: service_template.changed

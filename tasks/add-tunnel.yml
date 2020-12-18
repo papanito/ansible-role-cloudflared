@@ -1,0 +1,12 @@
+- name: Create config file for service '{{ item.key }}'
+  template:
+    src: config.yml.j2
+    dest: "{{ config_dir_tunnels }}/{{ item.key }}.yml"
+  register: tunnel_template
+- name: Restart systemd service {{ item.key }}
+  systemd:
+    name: "{{ systemd_filename }}@{{ item.key }}"
+    state: restarted
+    enabled: yes
+    no_block: no
+  when: tunnel_template.changed
