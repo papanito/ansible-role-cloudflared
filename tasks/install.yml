@@ -34,5 +34,5 @@
       owner: "{{ systemd_user }}"
       group: "{{ systemd_group }}"
       mode: "0640"
-    when: cert_content
+    when: cert_content is defined
   when: not install_only
