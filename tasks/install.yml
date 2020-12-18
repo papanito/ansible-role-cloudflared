@@ -18,10 +18,21 @@
   - name: Login to cloudflare using standard way (browser window)
     command: cloudflared login
     register: login_result
-    when: cert_location is not defined
+    when: cert_location is not defined and cert_content is not defined
   - name: Copy `{{ cert_location }}` to {{ config_dir }}/{{ cert_name }}
     copy:
       src: "{{ cert_location }}"
       dest: "{{ config_dir }}/{{ cert_name }}"
-    when: cert_location is defined
+      owner: "{{ systemd_user }}"
+      group: "{{ systemd_group }}"
+      mode: "0640"
+    when: cert_location is defined and cert_content is not defined
+  - name: Write certificate to {{ config_dir }}/{{ cert_name }}
+    copy:
+      content: "{{ cert_content }}"
+      dest: "{{ config_dir }}/{{ cert_name }}"
+      owner: "{{ systemd_user }}"
+      group: "{{ systemd_group }}"
+      mode: "0640"
+    when: cert_content
   when: not install_only
