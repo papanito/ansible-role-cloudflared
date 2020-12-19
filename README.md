@@ -1,6 +1,6 @@
 # Ansible role "papanito.cloudflared" <!-- omit in toc -->
 
-![Ansible Role](https://img.shields.io/ansible/role/49833) ![Ansible Quality Score](https://img.shields.io/ansible/quality/49833) ![Ansible Role](https://img.shields.io/ansible/role/d/49833) ![GitHub issues](https://img.shields.io/github/issues/papanito/ansible-role-cloudflared) ![GitHub pull requests](https://img.shields.io/github/issues-pr/papanito/ansible-role-cloudflared) 
+[![Ansible Role](https://img.shields.io/ansible/role/49833)](https://galaxy.ansible.com/papanito/cloudflared) [![Ansible Quality Score](https://img.shields.io/ansible/quality/49833)](https://galaxy.ansible.com/papanito/cloudflared) [![Ansible Role](https://img.shields.io/ansible/role/d/49833)](https://galaxy.ansible.com/papanito/cloudflared) [![GitHub issues](https://img.shields.io/github/issues/papanito/ansible-role-cloudflared)](https://github.com/papanito/ansible-role-cloudflared/issues) [![GitHub pull requests](https://img.shields.io/github/issues-pr/papanito/ansible-role-cloudflared)](https://github.com/papanito/ansible-role-cloudflared/pulls)
 
 - [Authenticate the daemon](#authenticate-the-daemon)
 - [Requirements](#requirements)
