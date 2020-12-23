@@ -1,13 +1,19 @@
-- name: Create config file for service '{{ item.key }}'
-  template:
-    src: config.yml.j2
-    dest: "{{ config_dir_tunnels }}/{{ item.key }}.yml"
-  with_dict: "{{ tunnels }}"
-- name: Start systemd service {{ item.key }}
+- name: Stop systemd service {{ item }}
   systemd:
-    name: "{{ systemd_filename }}@{{ item.key }}"
-    state: started
-    enabled: yes
+    name: "{{ systemd_filename }}@{{ item }}"
+    state: stopped
+    enabled: no
     daemon_reload: yes
     no_block: no
-  with_dict: "{{ tunnels }}"
+- name: Delete config file for tunnel '{{ item }}'
+  file:
+    state: absent
+    path: "{{ config_dir_tunnels }}/{{ item }}.yml"
+- name: Delete logfile for tunnel '{{ item }}'
+  file:
+    state: absent
+    path: "/var/log/cloudflared_{{ item }}.log"
+- name: Delete systemd service file for tunnel '{{ item }}'
+  file:
+    state: absent
+    path: "{{ systemd_filename }}@{{ item }}"

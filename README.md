@@ -10,6 +10,7 @@
   - [SSH Client config](#ssh-client-config)
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
+- [Test](#test)
 - [License](#license)
 - [Author Information](#author-information)
 
@@ -77,6 +78,7 @@ These are all variables
 |`force_install`|Set to `true` if you want to re-install `cloudflared`. By default the assumption is that `cloudflared` is running as a service and automatically auto-updates.|`false`|
 |`tunnels`|[Mandatory] List of services, each one defining [Cloudflare parameters](#cloudflare-parameters)|-|
 |`do_legacy_cleanup`|Due to the changes of switching to [systemd-unit-template] you may need to cleanup the "legacy" stuff, if you used the role before.|`false`|
+|`remove_unused_tunnels`|Removes unused tunnels, means tunnels running but not listed in `tunnels`.|`false`|
 
 ### Cloudflare parameters
 
@@ -163,6 +165,12 @@ The following example simply downloads `cloudflared` on your local machine and c
     external_domain: mycompany.com
   roles:
     - papanito.cloudflared
+```
+
+## Test
+
+```bash
+ansible-playbook tests/test.yml -i tests/inventory
 ```
 
 ## License
