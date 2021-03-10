@@ -2,7 +2,7 @@
 # defaults file for cloudflared
 systemd_user: root
 systemd_group: root
-use_systemv: False
+use_system_v: False
 remove_setup_certificate: False
 
 download_baseurl: https://bin.equinox.io/c/VdrWdbjqyF/
