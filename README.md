@@ -14,7 +14,7 @@
 - [License](#license)
 - [Author Information](#author-information)
 
-This ansible role does download and install `cloudflared` on the host and optionally installs the [argo-tunnel] as a service. 
+This ansible role does download and install `cloudflared` on the host and optionally installs the [argo-tunnel] as a service.
 
 The role is made in a way that you can install multiple services in parallel - simply run the role several times with different parameters `service`, `hostname` and `url`.
 
@@ -70,6 +70,7 @@ These are all variables
 |---------|-----------|-------------|
 |`systemd_user`|User for systemd service|`backup`|
 |`systemd_group`|Group for systemd service|`backup`|
+|`use_system_v`|Use System-V instead of systemd|`false`|
 |`download_baseurl`|Base url for `cloudflare` binaries|https://bin.equinox.io/c/VdrWdbjqyF/|
 |`cert_location`|Location of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
 |`cert_content`|Content of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
@@ -80,6 +81,8 @@ These are all variables
 |`tunnels`|[Mandatory] List of services, each one defining [Cloudflare parameters](#cloudflare-parameters)|-|
 |`do_legacy_cleanup`|Due to the changes of switching to [systemd-unit-template] you may need to cleanup the "legacy" stuff, if you used the role before.|`false`|
 |`remove_unused_tunnels`|Removes unused tunnels, means tunnels running but not listed in `tunnels`.|`false`|
+|`remove_setup_certificate`|Remove cert.pem after installing the service|`false`|
+
 
 ### Cloudflare parameters
 
