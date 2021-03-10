@@ -2,18 +2,6 @@
 
 [![Ansible Role](https://img.shields.io/ansible/role/49833)](https://galaxy.ansible.com/papanito/cloudflared) [![Ansible Quality Score](https://img.shields.io/ansible/quality/49833)](https://galaxy.ansible.com/papanito/cloudflared) [![Ansible Role](https://img.shields.io/ansible/role/d/49833)](https://galaxy.ansible.com/papanito/cloudflared) [![GitHub issues](https://img.shields.io/github/issues/papanito/ansible-role-cloudflared)](https://github.com/papanito/ansible-role-cloudflared/issues) [![GitHub pull requests](https://img.shields.io/github/issues-pr/papanito/ansible-role-cloudflared)](https://github.com/papanito/ansible-role-cloudflared/pulls)
 
-- [Authenticate the daemon](#authenticate-the-daemon)
-- [Requirements](#requirements)
-- [Role Variables](#role-variables)
-  - [General parameters](#general-parameters)
-  - [Cloudflare parameters](#cloudflare-parameters)
-  - [SSH Client config](#ssh-client-config)
-- [Dependencies](#dependencies)
-- [Example Playbook](#example-playbook)
-- [Test](#test)
-- [License](#license)
-- [Author Information](#author-information)
-
 This ansible role does download and install `cloudflared` on the host and optionally installs the [argo-tunnel] as a service.
 
 The role is made in a way that you can install multiple services in parallel - simply run the role several times with different parameters `service`, `hostname` and `url`.
@@ -34,11 +22,20 @@ The role performs the following steps:
 
     Additional parameters are configured via [Cloudflare parameters](#cloudflare-parameters)
 
-1. Create a [systemd-unit-template] `cloudflared@{{ tunnel }}.service` and start an instance for each service in the list of `tunnels`
+1. Depending on your init system do the following
+   * **Systemd**
 
-    ```bash
-    cloudflared tunnel --config {{ tunnel }}.yml
-    ```
+     Create a [systemd-unit-template] `cloudflared@{{ tunnel }}.service` and start an instance for each service in the list of `tunnels`
+
+     ```bash
+     cloudflared tunnel --config {{ tunnel }}.yml
+     ```
+
+   * **Init-V Systems**
+
+     1. Install [cloudflared service](https://github.com/papanito/ansible-role-cloudflared/blob/master/templates/cloudflared.systemv.j2) to `/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}`
+     2. Link Stop-Script to `/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}`
+     3. Link Start-Script to `/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}`
 
 ## Authenticate the daemon
 
