@@ -5,32 +5,46 @@
     daemon_location: "{{ install_target_dir }}/cloudflared"
     cf_binary_filename: "{{ cf_binaries[ansible_machine].filename_tgz }}"
     systemd_filename: "cloudflared"
+
 - name: Cleanup legacy stuff
   include_tasks: cleanup.yml
   with_dict: "{{ tunnels }}"
   when: do_legacy_cleanup
+
 - name: Populate service facts
   service_facts:
+
 - name: Setting tunnels_available
   set_fact:
-    tunnels_available: "{{ ansible_facts.services | select('match', 'cloudflared@(.+).service') | \
-                           map('regex_replace', 'cloudflared@', '') | map('regex_replace', '.service' '') | list }}"
+    tunnels_available: "{{ ansible_facts.services | select('match', 'cloudflared@(.+).service|cloudflared-(.*)') | \
+                           map('regex_replace', 'cloudflared@|cloudflared-', '') | map('regex_replace', '.service' '') | list }}"
+
 - name: Setting tunnels to remove
   set_fact:
     tunnels_to_remove: "{{ tunnels_available | difference(tunnels) }}"
+
 - name: Remove unused tunnels
   include_tasks: remove-tunnels.yml
   with_items: "{{ tunnels_to_remove }}"
   when: remove_unused_tunnels
+
 - name: Download and install cloudflared
   include_tasks: install.yml
+
 - name: Install cloudflared
   include_tasks: configure.yml
+  with_dict: "{{ tunnels }}"
   when: not install_only
+
 - name: Configure tunnels
   include_tasks: configure-tunnels.yml
   when: not install_only
+
 - name: Add ssh proxy for all servers in the ssh client config
   include_tasks: ssh-client-config.yml
   loop: "{{ groups['servers'] }}"
   when: ssh_client_config
+
+- name: Remove setup certificate
+  include_tasks: remove-setup-certificate.yml
+  when: remove_setup_certificate

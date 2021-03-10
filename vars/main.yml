@@ -19,6 +19,7 @@ cf_binaries:
 
 ## common values
 systemd_target_dir: /etc/systemd/system/
+initv_target_dir: /etc/init.d/
 install_target_dir: /usr/bin
 config_dir: /etc/cloudflared
 config_dir_tunnels: "{{ config_dir }}"

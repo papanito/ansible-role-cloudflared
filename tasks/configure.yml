@@ -1,10 +1,52 @@
-- name: Install cloudflared service for service '{{ tunnel_name }}''
+- name: Define required variables for configure
+  set_fact:
+    tunnel_name: "{{ item.key }}"
+
+- name: Install cloudflared service for service '{{ tunnel_name }}' in systemd
   template:
     src: cloudflared.service.j2
     dest: "{{ systemd_target_dir }}/{{ systemd_filename }}@.service"
   register: service_template
+  when: not use_system_v
 - name: Reload systemd
   systemd:
     daemon_reload: yes
     no_block: no
-  when: service_template.changed
+  when: service_template.changed and not use_system_v
+
+- name: Install cloudflared service for service '{{ tunnel_name }}' in System-V
+  template:
+    src: cloudflared.systemv.j2
+    dest: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
+    owner: root
+    group: root
+    mode: 0755
+  register: service_template
+  when: use_system_v
+
+- name: Link Stop-Script to /etc/init.d/"{{ systemd_filename }}-{{ tunnel_name }}"
+  file:
+    src: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
+    path: "/etc/{{ item_runlevel }}/K01{{ systemd_filename }}-{{ tunnel_name }}"
+    state: link
+  with_items:
+    - rc0.d
+    - rc1.d
+    - rc6.d
+  loop_control:
+    loop_var: item_runlevel
+  when: service_template.changed and use_system_v
+
+- name: "Link Start-Script /etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
+  file:
+    src: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
+    path: "/etc/{{ item_runlevel }}/S99{{ systemd_filename }}-{{ tunnel_name }}"
+    state: link
+  with_items:
+    - rc2.d
+    - rc3.d
+    - rc4.d
+    - rc5.d
+  loop_control:
+    loop_var: item_runlevel
+  when: service_template.changed and use_system_v

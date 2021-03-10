@@ -5,15 +5,57 @@
     enabled: no
     daemon_reload: yes
     no_block: no
+  when: not use_system_v
+
+- name: Stop service "{{ systemd_filename }}-{{ item }}"
+  ansible.builtin.service:
+    name: "{{ systemd_filename }}-{{ item }}"
+    state: stopped
+  when: use_system_v
+
 - name: Delete config file for tunnel '{{ item }}'
   file:
     state: absent
     path: "{{ config_dir_tunnels }}/{{ item }}.yml"
+
 - name: Delete logfile for tunnel '{{ item }}'
   file:
     state: absent
     path: "/var/log/cloudflared_{{ item }}.log"
+
 - name: Delete systemd service file for tunnel '{{ item }}'
   file:
     state: absent
     path: "{{ systemd_filename }}@{{ item }}"
+  when: not use_system_v
+
+- name: Delete Link in runlevel directory to /etc/init.d/"{{ systemd_filename }}-{{ item }}"
+  file:
+    path: "/etc/{{ item_runlevel }}/K01{{ systemd_filename }}-{{ item }}"
+    state: absent
+  with_items:
+    - rc0.d
+    - rc1.d
+    - rc6.d
+  loop_control:
+    loop_var: item_runlevel
+  when: use_system_v
+
+- name: "Delete Link in runlevel directory to /etc/init.d/{{ systemd_filename }}-{{ item }}"
+  file:
+    path: "/etc/{{ item_runlevel }}/S99{{ systemd_filename }}-{{ item }}"
+    state: absent
+  with_items:
+    - rc2.d
+    - rc3.d
+    - rc4.d
+    - rc5.d
+  loop_control:
+    loop_var: item_runlevel
+  when: use_system_v
+
+- name: Delete systemv service file for tunnel '{{ item }}'
+  file:
+    state: absent
+    path: /etc/init.d/"{{ systemd_filename }}-{{ item }}"
+  when: use_system_v

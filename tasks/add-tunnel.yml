@@ -8,5 +8,10 @@
     name: "{{ systemd_filename }}@{{ item.key }}"
     state: restarted
     enabled: yes
-    no_block: no
-  when: service_template.changed or tunnel_template.changed
+  when: (service_template.changed or tunnel_template.changed) and not use_system_v
+- name: Restart systemv service {{ item.key }}
+  ansible.builtin.service:
+    name: "{{ systemd_filename }}-{{ item.key }}"
+    state: restarted
+    enabled: yes
+  when: (service_template.changed or tunnel_template.changed) and use_system_v

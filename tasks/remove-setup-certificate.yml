@@ -1,0 +1,4 @@
+- name: Removing {{ config_dir }}/{{ cert_name }}
+  file:
+    path: "{{ config_dir }}/{{ cert_name }}"
+    state: absent
