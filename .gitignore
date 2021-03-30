@@ -4,6 +4,7 @@
 
 ### Ansible ###
 *.retry
+.cache
 
 ### VisualStudioCode ###
 .vscode/*

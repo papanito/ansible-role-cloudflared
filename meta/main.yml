@@ -1,5 +1,6 @@
 galaxy_info:
   role_name: cloudflared
+  namespace: papanito
   author: Adrian Wyssmann
   description: Ansible role do install and run cloudflare argo tunnel
   company: wyssmann.com
