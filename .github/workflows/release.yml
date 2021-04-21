@@ -40,7 +40,7 @@ jobs:
       - name: Set current version
         run: echo $RELEASE_VERSION > ./VERSION
       - name: Create changelog
-        run: auto-changelog --ignore-commit-pattern "\[ci|docu|meta\]|fixup"
+        run: auto-changelog --ignore-commit-pattern "\[?ci|docu|meta\]?|fixup"
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "[meta] Update changelog, bump version"
@@ -61,7 +61,7 @@ jobs:
       - name: Install auto-changelog
         run: sudo npm install -g auto-changelog
       - name: Create release notes
-        run: auto-changelog --ignore-commit-pattern "\[ci|docu|meta\]|fixup" --starting-version $RELEASE_VERSION --hide-credit -o RELEASENOTES.md
+        run: auto-changelog --ignore-commit-pattern "\[?ci|docu|meta\]?|fixup" --starting-version $RELEASE_VERSION -o RELEASENOTES.md
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
