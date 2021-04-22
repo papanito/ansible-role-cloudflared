@@ -1,17 +1,17 @@
 - name: Create config file for service '{{ item.key }}'
   template:
     src: config.yml.j2
-    dest: "{{ config_dir_tunnels }}/{{ item.key }}.yml"
+    dest: "{{ cf_config_dir_cf_named_tunnels }}/{{ item.key }}.yml"
   register: tunnel_template
 - name: Restart systemd service {{ item.key }}
   systemd:
     name: "{{ systemd_filename }}@{{ item.key }}"
     state: restarted
     enabled: yes
-  when: (service_template.changed or tunnel_template.changed) and not use_system_v
+  when: (service_template.changed or tunnel_template.changed) and not cf_use_system_v
 - name: Restart systemv service {{ item.key }}
   ansible.builtin.service:
     name: "{{ systemd_filename }}-{{ item.key }}"
     state: restarted
     enabled: yes
-  when: (service_template.changed or tunnel_template.changed) and use_system_v
+  when: (service_template.changed or tunnel_template.changed) and cf_use_system_v

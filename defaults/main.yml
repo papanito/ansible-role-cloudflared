@@ -1,15 +1,17 @@
 ---
 # defaults file for cloudflared
-systemd_user: root
-systemd_group: root
-use_system_v: False
-remove_setup_certificate: False
+cf_systemd_user: root
+cf_systemd_group: root
+cf_use_system_v: False
+cf_remove_setup_certificate: False
 
-download_baseurl: https://bin.equinox.io/c/VdrWdbjqyF/
-download_folder: ./download
-install_only: False
-force_install: False
-do_legacy_cleanup: False
-remove_unused_tunnels: False
-ssh_client_config: False
-ssh_client_config_group: ""
+cf_download_baseurl: https://bin.equinox.io/c/VdrWdbjqyF/
+cf_download_folder: ./download
+cf_install_only: False
+cf_force_install: False
+cf_do_legacy_cleanup: False
+cf_remove_unused_tunnel: False
+cf_ssh_client_config: False
+cf_ssh_client_config_group: ""
+
+cf_credential_file_base: "/root/.cloudflared/"

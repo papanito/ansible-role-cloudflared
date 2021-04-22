@@ -2,9 +2,9 @@
 - hosts: localhost
   remote_user: aedu
   vars:
-    install_only: True
-    ssh_client_config: True
-    ssh_client_config_group: servers
+    cf_install_only: True
+    cf_ssh_client_config: True
+    cf_ssh_client_config_group: servers
     external_domain: wyssmann.com
   roles:
     - ansible-role-cloudflared

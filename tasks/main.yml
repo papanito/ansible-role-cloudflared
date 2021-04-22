@@ -2,49 +2,49 @@
 # tasks file for cloudflared
 - name: Define required variables
   set_fact:
-    daemon_location: "{{ install_target_dir }}/cloudflared"
+    daemon_location: "{{ cf_install_target_dir }}/cloudflared"
     cf_binary_filename: "{{ cf_binaries[ansible_machine].filename_tgz }}"
     systemd_filename: "cloudflared"
 
 - name: Cleanup legacy stuff
   include_tasks: cleanup.yml
-  with_dict: "{{ tunnels }}"
-  when: do_legacy_cleanup
+  with_dict: "{{ cf_named_tunnels }}"
+  when: cf_do_legacy_cleanup
 
 - name: Populate service facts
   service_facts:
 
-- name: Setting tunnels_available
+- name: Setting cf_named_tunnels_available
   set_fact:
-    tunnels_available: "{{ ansible_facts.services | select('match', 'cloudflared@(.+).service|cloudflared-(.*)') | \
+    cf_named_tunnels_available: "{{ ansible_facts.services | select('match', 'cloudflared@(.+).service|cloudflared-(.*)') | \
                            map('regex_replace', 'cloudflared@|cloudflared-', '') | map('regex_replace', '.service' '') | list }}"
 
-- name: Setting tunnels to remove
+- name: Setting cf_named_tunnels to remove
   set_fact:
-    tunnels_to_remove: "{{ tunnels_available | difference(tunnels) }}"
+    cf_named_tunnels_to_remove: "{{ cf_named_tunnels_available | difference(cf_named_tunnels) }}"
 
-- name: Remove unused tunnels
-  include_tasks: remove-tunnels.yml
-  with_items: "{{ tunnels_to_remove }}"
-  when: remove_unused_tunnels
+- name: Remove unused cf_named_tunnels
+  include_tasks: remove-cf_named_tunnels.yml
+  with_items: "{{ cf_named_tunnels_to_remove }}"
+  when: cf_remove_unused_tunnel
 
 - name: Download and install cloudflared
   include_tasks: install.yml
 
 - name: Install cloudflared
   include_tasks: configure.yml
-  with_dict: "{{ tunnels }}"
-  when: not install_only
+  with_dict: "{{ cf_named_tunnels }}"
+  when: not cf_install_only
 
-- name: Configure tunnels
-  include_tasks: configure-tunnels.yml
-  when: not install_only
+- name: Configure cf_named_tunnels
+  include_tasks: configure-cf_named_tunnels.yml
+  when: not cf_install_only
 
 - name: Add ssh proxy for all servers in the ssh client config
   include_tasks: ssh-client-config.yml
   loop: "{{ groups['servers'] }}"
-  when: ssh_client_config
+  when: cf_ssh_client_config
 
 - name: Remove setup certificate
   include_tasks: remove-setup-certificate.yml
-  when: remove_setup_certificate
+  when: cf_remove_setup_certificate

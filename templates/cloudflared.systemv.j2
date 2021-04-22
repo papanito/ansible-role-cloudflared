@@ -1,6 +1,6 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          cloudflared tunnel for {{ tunnel_name}}
+# Provides:          cloudflared tunnel for {{ tunnel_name }}
 # Required-Start:    $local_fs $network $named $time $syslog
 # Required-Stop:     $local_fs $network $named $time $syslog
 # Default-Start:     2 3 4 5
@@ -8,8 +8,8 @@
 # Description:       cloudflared tunnel for {{ tunnel_name }}
 ### END INIT INFO
 
-SCRIPT="cloudflared tunnel --config {{ config_dir_tunnels }}/{{ tunnel_name }}.yml"
-RUNAS={{ systemd_user }}
+SCRIPT="cloudflared tunnel --config {{ cf_config_dir_cf_named_tunnels }}/{{ tunnel_name }}.yml run {{ tunnel_name }}"
+RUNAS={{ cf_systemd_user }}
 
 PIDFILE=/var/run/{{ systemd_filename }}_{{ tunnel_name }}.pid
 LOGFILE=/var/log/{{ systemd_filename }}_{{ tunnel_name }}.log

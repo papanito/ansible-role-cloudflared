@@ -5,18 +5,18 @@
     enabled: no
     daemon_reload: yes
     no_block: no
-  when: not use_system_v
+  when: not cf_use_system_v
 
 - name: Stop service "{{ systemd_filename }}-{{ item }}"
   ansible.builtin.service:
     name: "{{ systemd_filename }}-{{ item }}"
     state: stopped
-  when: use_system_v
+  when: cf_use_system_v
 
 - name: Delete config file for tunnel '{{ item }}'
   file:
     state: absent
-    path: "{{ config_dir_tunnels }}/{{ item }}.yml"
+    path: "{{ cf_config_dir_cf_named_tunnels }}/{{ item }}.yml"
 
 - name: Delete logfile for tunnel '{{ item }}'
   file:
@@ -27,7 +27,7 @@
   file:
     state: absent
     path: "{{ systemd_filename }}@{{ item }}"
-  when: not use_system_v
+  when: not cf_use_system_v
 
 - name: Delete Link in runlevel directory to /etc/init.d/"{{ systemd_filename }}-{{ item }}"
   file:
@@ -39,7 +39,7 @@
     - rc6.d
   loop_control:
     loop_var: item_runlevel
-  when: use_system_v
+  when: cf_use_system_v
 
 - name: "Delete Link in runlevel directory to /etc/init.d/{{ systemd_filename }}-{{ item }}"
   file:
@@ -52,10 +52,10 @@
     - rc5.d
   loop_control:
     loop_var: item_runlevel
-  when: use_system_v
+  when: cf_use_system_v
 
 - name: Delete systemv service file for tunnel '{{ item }}'
   file:
     state: absent
     path: /etc/init.d/"{{ systemd_filename }}-{{ item }}"
-  when: use_system_v
+  when: cf_use_system_v

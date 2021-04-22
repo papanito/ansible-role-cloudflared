@@ -5,14 +5,14 @@
 - name: Install cloudflared service for service '{{ tunnel_name }}' in systemd
   template:
     src: cloudflared.service.j2
-    dest: "{{ systemd_target_dir }}/{{ systemd_filename }}@.service"
+    dest: "{{ cf_systemd_target_dir }}/{{ systemd_filename }}@.service"
   register: service_template
-  when: not use_system_v
+  when: not cf_use_system_v
 - name: Reload systemd
   systemd:
     daemon_reload: yes
     no_block: no
-  when: service_template.changed and not use_system_v
+  when: service_template.changed and not cf_use_system_v
 
 - name: Install cloudflared service for service '{{ tunnel_name }}' in System-V
   template:
@@ -22,7 +22,7 @@
     group: root
     mode: 0755
   register: service_template
-  when: use_system_v
+  when: cf_use_system_v
 
 - name: Link Stop-Script to /etc/init.d/"{{ systemd_filename }}-{{ tunnel_name }}"
   file:
@@ -35,7 +35,7 @@
     - rc6.d
   loop_control:
     loop_var: item_runlevel
-  when: service_template.changed and use_system_v
+  when: service_template.changed and cf_use_system_v
 
 - name: "Link Start-Script /etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
   file:
@@ -49,4 +49,4 @@
     - rc5.d
   loop_control:
     loop_var: item_runlevel
-  when: service_template.changed and use_system_v
+  when: service_template.changed and cf_use_system_v
