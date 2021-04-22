@@ -6,11 +6,6 @@
     cf_binary_filename: "{{ cf_binaries[ansible_machine].filename_tgz }}"
     systemd_filename: "cloudflared"
 
-- name: Cleanup legacy stuff
-  include_tasks: cleanup.yml
-  with_dict: "{{ cf_named_tunnels }}"
-  when: cf_do_legacy_cleanup
-
 - name: Populate service facts
   service_facts:
 
