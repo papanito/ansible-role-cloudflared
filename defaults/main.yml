@@ -1,8 +1,8 @@
 ---
 # defaults file for cloudflared
+cf_init_system: systemd
 cf_systemd_user: root
 cf_systemd_group: root
-cf_use_system_v: False
 cf_remove_setup_certificate: False
 
 cf_download_baseurl: https://bin.equinox.io/c/VdrWdbjqyF/

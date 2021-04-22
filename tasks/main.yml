@@ -17,7 +17,7 @@
 - name: Setting cf_named_tunnels_available
   set_fact:
     cf_named_tunnels_available: "{{ ansible_facts.services | select('match', 'cloudflared@(.+).service|cloudflared-(.*)') | \
-                           map('regex_replace', 'cloudflared@|cloudflared-', '') | map('regex_replace', '.service' '') | list }}"
+                                 map('regex_replace', 'cloudflared@|cloudflared-', '') | map('regex_replace', '.service' '') | list }}"
 
 - name: Setting cf_named_tunnels to remove
   set_fact:
@@ -31,14 +31,15 @@
 - name: Download and install cloudflared
   include_tasks: install.yml
 
-- name: Install cloudflared
-  include_tasks: configure.yml
+- name: Install cloudflared as a systemd service
+  include_tasks: configure_systemd.yml
   with_dict: "{{ cf_named_tunnels }}"
-  when: not cf_install_only
+  when: not cf_install_only and cf_init_system == "systemd"
 
-- name: Configure cf_named_tunnels
-  include_tasks: configure-cf_named_tunnels.yml
-  when: not cf_install_only
+- name: Install cloudflared as a system-v service
+  include_tasks: configure_initv.yml
+  with_dict: "{{ cf_named_tunnels }}"
+  when: not cf_install_only and cf_init_system == "initv"
 
 - name: Add ssh proxy for all servers in the ssh client config
   include_tasks: ssh-client-config.yml
@@ -46,5 +47,5 @@
   when: cf_ssh_client_config
 
 - name: Remove setup certificate
-  include_tasks: remove-setup-certificate.yml
+  include_tasks: remove_setup_certificate.yml
   when: cf_remove_setup_certificate

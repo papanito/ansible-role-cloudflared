@@ -5,29 +5,13 @@
     enabled: no
     daemon_reload: yes
     no_block: no
-  when: not cf_use_system_v
+  when: cf_init_system == "systemd"
 
 - name: Stop service "{{ systemd_filename }}-{{ item }}"
   ansible.builtin.service:
     name: "{{ systemd_filename }}-{{ item }}"
     state: stopped
-  when: cf_use_system_v
-
-- name: Delete config file for tunnel '{{ item }}'
-  file:
-    state: absent
-    path: "{{ cf_config_dir_cf_named_tunnels }}/{{ item }}.yml"
-
-- name: Delete logfile for tunnel '{{ item }}'
-  file:
-    state: absent
-    path: "/var/log/cloudflared_{{ item }}.log"
-
-- name: Delete systemd service file for tunnel '{{ item }}'
-  file:
-    state: absent
-    path: "{{ systemd_filename }}@{{ item }}"
-  when: not cf_use_system_v
+  when: cf_init_system == "initv"
 
 - name: Delete Link in runlevel directory to /etc/init.d/"{{ systemd_filename }}-{{ item }}"
   file:
@@ -39,7 +23,7 @@
     - rc6.d
   loop_control:
     loop_var: item_runlevel
-  when: cf_use_system_v
+  when: cf_init_system == "initv"
 
 - name: "Delete Link in runlevel directory to /etc/init.d/{{ systemd_filename }}-{{ item }}"
   file:
@@ -52,10 +36,18 @@
     - rc5.d
   loop_control:
     loop_var: item_runlevel
-  when: cf_use_system_v
+  when: cf_init_system == "initv"
 
-- name: Delete systemv service file for tunnel '{{ item }}'
+- name: Delete service-, log- and config-files for tunnel '{{ item }}'
   file:
     state: absent
-    path: /etc/init.d/"{{ systemd_filename }}-{{ item }}"
-  when: cf_use_system_v
+    path: "{{ cf_file_to_remove }}"
+  loop:
+    - "{{ cf_config_dir }}/{{ item }}.yml"
+    - "{{ cf_systemd_target_dir }}/{{ systemd_filename }}@{{ item }}"
+    - "/var/log/cloudflared_{{ item }}.log"
+    - "/etc/init.d/{{ systemd_filename }}-{{ item }}"
+    - "/var/run/{{ systemd_filename }}_{{ item }}.pid"
+    - "/var/log/{{ systemd_filename }}_{{ item }}.log"
+  loop_control:
+    loop_var: cf_file_to_remov

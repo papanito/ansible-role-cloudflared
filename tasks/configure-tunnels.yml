@@ -1,3 +1,0 @@
-- name: Configure cf_named_tunnels
-  include_tasks: add-tunnel.yml
-  with_dict: "{{ cf_named_tunnels }}"

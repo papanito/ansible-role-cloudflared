@@ -1,28 +1,17 @@
 - name: Define required variables for configure
   set_fact:
     tunnel_name: "{{ item.key }}"
-
-- name: Install cloudflared service for service '{{ tunnel_name }}' in systemd
-  template:
-    src: cloudflared.service.j2
-    dest: "{{ cf_systemd_target_dir }}/{{ systemd_filename }}@.service"
-  register: service_template
-  when: not cf_use_system_v
-- name: Reload systemd
-  systemd:
-    daemon_reload: yes
-    no_block: no
-  when: service_template.changed and not cf_use_system_v
+    initv_pid_file: "/var/run/{{ systemd_filename }}_{{ tunnel_name }}.pid"
+    initv_log_file: "/var/log/{{ systemd_filename }}_{{ tunnel_name }}.log"
 
 - name: Install cloudflared service for service '{{ tunnel_name }}' in System-V
   template:
-    src: cloudflared.systemv.j2
+    src: cloudflared.initv.j2
     dest: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
     owner: root
     group: root
     mode: 0755
   register: service_template
-  when: cf_use_system_v
 
 - name: Link Stop-Script to /etc/init.d/"{{ systemd_filename }}-{{ tunnel_name }}"
   file:
@@ -35,7 +24,7 @@
     - rc6.d
   loop_control:
     loop_var: item_runlevel
-  when: service_template.changed and cf_use_system_v
+  when: service_template.changed
 
 - name: "Link Start-Script /etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
   file:
@@ -49,4 +38,4 @@
     - rc5.d
   loop_control:
     loop_var: item_runlevel
-  when: service_template.changed and cf_use_system_v
+  when: service_template.changed

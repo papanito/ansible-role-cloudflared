@@ -1,0 +1,15 @@
+- name: Define required variables for configure
+  set_fact:
+    tunnel_name: "{{ item.key }}"
+
+- name: Install cloudflared service for service '{{ tunnel_name }}' in systemd
+  template:
+    src: cloudflared.service.j2
+    dest: "{{ cf_systemd_target_dir }}/{{ systemd_filename }}@.service"
+  register: service_template
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+    no_block: no
+  when: service_template.changed
