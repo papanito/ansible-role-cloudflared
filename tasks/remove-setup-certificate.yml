@@ -1,4 +1,4 @@
-- name: Removing {{ config_dir }}/{{ cert_name }}
+- name: Removing {{ cf_config_dir }}/{{ cf_cert_name }}
   file:
-    path: "{{ config_dir }}/{{ cert_name }}"
+    path: "{{ cf_config_dir }}/{{ cf_cert_name }}"
     state: absent
