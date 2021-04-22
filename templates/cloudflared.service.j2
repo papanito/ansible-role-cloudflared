@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=cloudflared tunnel --config {{ cf_config_dir_cf_named_tunnels }}/%i.yml run %i
+ExecStart=cloudflared tunnel --config {{ cf_config_dir }}/%i.yml run %i
 User={{ cf_systemd_user }}
 Group={{ cf_systemd_group }}
 

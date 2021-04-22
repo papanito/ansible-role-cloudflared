@@ -8,11 +8,11 @@
 # Description:       cloudflared tunnel for {{ tunnel_name }}
 ### END INIT INFO
 
-SCRIPT="cloudflared tunnel --config {{ cf_config_dir_cf_named_tunnels }}/{{ tunnel_name }}.yml run {{ tunnel_name }}"
+SCRIPT="cloudflared tunnel --config {{ cf_config_dir }}/{{ tunnel_name }}.yml run {{ tunnel_name }}"
 RUNAS={{ cf_systemd_user }}
 
-PIDFILE=/var/run/{{ systemd_filename }}_{{ tunnel_name }}.pid
-LOGFILE=/var/log/{{ systemd_filename }}_{{ tunnel_name }}.log
+PIDFILE={{ initv_pid_file }}
+LOGFILE={{ initv_log_file }}
 
 start() {
   if [ -f $PIDFILE ] && [ -s $PIDFILE ] && kill -0 $(cat $PIDFILE); then

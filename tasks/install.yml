@@ -9,9 +9,9 @@
     dest: "{{ cf_install_target_dir }}"
     remote_src: yes
   when: not stat_result.stat.exists or cf_force_install
-- name: Create {{ cf_config_dir_cf_named_tunnels }} if it does not exist
+- name: Create {{ cf_config_dir }} if it does not exist
   file:
-    path: "{{ cf_config_dir_cf_named_tunnels }}"
+    path: "{{ cf_config_dir }}"
     state: directory
     mode: 0744
 - block:
