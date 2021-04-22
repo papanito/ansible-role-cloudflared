@@ -42,7 +42,7 @@
   when: not cf_install_only and cf_init_system == "initv"
 
 - name: Add ssh proxy for all servers in the ssh client config
-  include_tasks: ssh-client-config.yml
+  include_tasks: ssh_client_config.yml
   loop: "{{ groups['servers'] }}"
   when: cf_ssh_client_config
 

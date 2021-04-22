@@ -10,7 +10,7 @@ credentials-file: {{0cf_credential_file_base}}/{{ item.value.credential_file  }}
 ingress:
   {{ item.value.ingress | to_yaml }}
 
-{% if not (item.value.no_logfile | default(False)) %}
+{% if (item.value.cf_logfile | default(False)) %}
 logfile: /var/log/cloudflared_{{ item.key }}.log
 {% endif %}
 {% if item.value.autoupdate_freq is defined %}
