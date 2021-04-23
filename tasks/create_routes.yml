@@ -1,0 +1,7 @@
+- name: Create dns entries
+  include_tasks: create_routes_dns.yml
+  loop: "{{ cf_tunnel.value.routes.dns }}"
+  loop_control:
+    loop_var: cf_dns_entry
+  tags:
+  - cf_routing

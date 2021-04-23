@@ -1,0 +1,7 @@
+- name: Create dns '{{ cf_dns_entry }}' for tunnel '{{ cf_tunnel.key }}'
+  command: "cloudflared tunnel route dns {{ cf_tunnel.key }} {{ cf_dns_entry }}"
+  register: create_route
+  ignore_errors: true
+- name: Show command output
+  ansible.builtin.debug:
+    msg: "{{ create_route.stdout }}{{ create_route.stderr }}"

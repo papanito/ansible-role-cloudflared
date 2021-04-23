@@ -3,7 +3,7 @@
 ##   ProxyCommand /usr/local/bin/cloudflared access ssh --hostname %h
 
 - name: Create file {{ ssh_config_file }} if it does not exists
-  file:
+  ansible.builtin.file:
     path: "{{ ssh_config_file }}"
     state: touch
 

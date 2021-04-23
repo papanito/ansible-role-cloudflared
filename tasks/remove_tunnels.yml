@@ -1,5 +1,5 @@
 - name: Stop systemd service {{ item }}
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ systemd_filename }}@{{ item }}"
     state: stopped
     enabled: no
@@ -14,7 +14,7 @@
   when: cf_init_system == "initv"
 
 - name: Delete Link in runlevel directory to /etc/init.d/"{{ systemd_filename }}-{{ item }}"
-  file:
+  ansible.builtin.file:
     path: "/etc/{{ item_runlevel }}/K01{{ systemd_filename }}-{{ item }}"
     state: absent
   with_items:
@@ -26,7 +26,7 @@
   when: cf_init_system == "initv"
 
 - name: "Delete Link in runlevel directory to /etc/init.d/{{ systemd_filename }}-{{ item }}"
-  file:
+  ansible.builtin.file:
     path: "/etc/{{ item_runlevel }}/S99{{ systemd_filename }}-{{ item }}"
     state: absent
   with_items:
@@ -39,7 +39,7 @@
   when: cf_init_system == "initv"
 
 - name: Delete service-, log- and config-files for tunnel '{{ item }}'
-  file:
+  ansible.builtin.file:
     state: absent
     path: "{{ cf_file_to_remove }}"
   loop:
@@ -50,4 +50,4 @@
     - "/var/run/{{ systemd_filename }}_{{ item }}.pid"
     - "/var/log/{{ systemd_filename }}_{{ item }}.log"
   loop_control:
-    loop_var: cf_file_to_remov
+    loop_var: cf_file_to_remove

@@ -1,0 +1,54 @@
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    path: "{{ cf_target_dir }}"
+    state: directory
+    mode: 0755
+    group: root
+    owner: root
+  loop:
+    - "{{ cf_config_dir }}"
+    - "{{ cf_credentials_dir }}"
+  loop_control:
+    loop_var: cf_target_dir
+
+- name: Create config file for service '{{ cf_tunnel.key }}'
+  ansible.builtin.template:
+    src: config.yml.j2
+    dest: "{{ cf_config_dir }}/{{ cf_tunnel.key }}.yml"
+  register: tunnel_config
+
+- name: Authentication file '{{ cf_tunnel.key }}'
+  ansible.builtin.template:
+    src: tunnel.json.j2
+    dest: "{{ cf_credentials_dir }}/{{ cf_tunnel.value.tunnel_id }}.json"
+  register: tunnel_credentials
+  no_log: True
+
+
+- block:
+  - name: Ensure systemd service {{ cf_tunnel.key }} is running
+    systemd:
+      name: "{{ systemd_filename }}@{{ cf_tunnel.key }}"
+      state: started
+      enabled: yes
+  - name: Restart systemd service {{ cf_tunnel.key }}
+    systemd:
+      name: "{{ systemd_filename }}@{{ cf_tunnel.key }}"
+      state: restarted
+      enabled: yes
+    when: (tunnel_config.changed or tunnel_credentials.changed )
+  when: cf_init_system == "systemd"
+
+- block:
+  - name: Ensure init-v service {{ cf_tunnel.key }} is running
+    systemd:
+      name: "{{ systemd_filename }}-{{ cf_tunnel.key }}"
+      state: started
+      enabled: yes
+  - name: Restart init-v service {{ cf_tunnel.key }}
+    systemd:
+      name: "{{ systemd_filename }}-{{ cf_tunnel.key }}"
+      state: restarted
+      enabled: yes
+    when: (tunnel_config.changed or tunnel_credentials.changed )
+  when: cf_init_system == "initv"
