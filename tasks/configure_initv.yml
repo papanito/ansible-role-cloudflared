@@ -5,7 +5,7 @@
     initv_log_file: "/var/log/{{ systemd_filename }}_{{ tunnel_name }}.log"
 
 - name: Install cloudflared service for service '{{ tunnel_name }}' in System-V
-  template:
+  ansible.builtin.template:
     src: cloudflared.initv.j2
     dest: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
     owner: root
@@ -14,7 +14,7 @@
   register: service_template
 
 - name: Link Stop-Script to /etc/init.d/"{{ systemd_filename }}-{{ tunnel_name }}"
-  file:
+  ansible.builtin.file:
     src: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
     path: "/etc/{{ item_runlevel }}/K01{{ systemd_filename }}-{{ tunnel_name }}"
     state: link
@@ -27,7 +27,7 @@
   when: service_template.changed
 
 - name: "Link Start-Script /etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
-  file:
+  ansible.builtin.file:
     src: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
     path: "/etc/{{ item_runlevel }}/S99{{ systemd_filename }}-{{ tunnel_name }}"
     state: link

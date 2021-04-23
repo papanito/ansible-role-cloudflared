@@ -2,9 +2,14 @@
 - hosts: localhost
   remote_user: root
   vars:
-    tunnels:
+    cf_tunnels:
       ssh:
         hostname: demo.mycompany.com
         url: https://localhost:8080
+      test:
+        ingress:
+        - hostname: test.mycompany.com
+          service: http_status:503
+        - service: http_status:404
   roles:
     - ansible-role-cloudflared

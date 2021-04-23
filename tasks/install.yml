@@ -1,5 +1,5 @@
 - name: Check if file '{{ daemon_location }}' exists
-  stat:
+  ansible.builtin.stat:
     path: "{{ daemon_location }}"
     checksum_algorithm: sha256
   register: stat_result
@@ -10,17 +10,17 @@
     remote_src: yes
   when: not stat_result.stat.exists or cf_force_install
 - name: Create {{ cf_config_dir }} if it does not exist
-  file:
+  ansible.builtin.file:
     path: "{{ cf_config_dir }}"
     state: directory
     mode: 0744
 - block:
   - name: Login to cloudflare using standard way (browser window)
-    command: cloudflared login
+    ansible.builtin.command: cloudflared login
     register: login_result
     when: cf_cert_location is not defined and cf_cert_content is not defined
   - name: Copy `{{ cf_cert_location }}` to {{ cf_config_dir }}/{{ cf_cert_name }}
-    copy:
+    ansible.builtin.copy:
       src: "{{ cf_cert_location }}"
       dest: "{{ cf_config_dir }}/{{ cf_cert_name }}"
       owner: "{{ cf_systemd_user }}"
@@ -28,7 +28,7 @@
       mode: "0640"
     when: cf_cert_location is defined and cf_cert_content is not defined
   - name: Write certificate to {{ cf_config_dir }}/{{ cf_cert_name }}
-    copy:
+    ansible.builtin.copy:
       content: "{{ cf_cert_content }}"
       dest: "{{ cf_config_dir }}/{{ cf_cert_name }}"
       owner: "{{ cf_systemd_user }}"

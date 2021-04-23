@@ -13,4 +13,4 @@ cf_remove_unused_tunnel: False
 cf_ssh_client_config: False
 cf_ssh_client_config_group: ""
 
-cf_credential_file_base: "/root/.cloudflared/"
+cf_credentials_dir: "/root/.cloudflared/"

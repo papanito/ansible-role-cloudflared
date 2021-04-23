@@ -1,4 +1,4 @@
 - name: Removing {{ cf_config_dir }}/{{ cf_cert_name }}
-  file:
+  ansible.builtin.file:
     path: "{{ cf_config_dir }}/{{ cf_cert_name }}"
     state: absent

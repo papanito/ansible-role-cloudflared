@@ -9,37 +9,85 @@
 - name: Populate service facts
   service_facts:
 
-- name: Setting cf_named_tunnels_available
+- name: Setting cf_tunnels_available
   set_fact:
-    cf_named_tunnels_available: "{{ ansible_facts.services | select('match', 'cloudflared@(.+).service|cloudflared-(.*)') | \
+    cf_tunnels_available: "{{ ansible_facts.services | select('match', 'cloudflared@(.+).service|cloudflared-(.*)') | \
                                  map('regex_replace', 'cloudflared@|cloudflared-', '') | map('regex_replace', '.service' '') | list }}"
+  tags:
+  - cf_cleanup
 
-- name: Setting cf_named_tunnels to remove
+- name: Setting cf_tunnels to remove
   set_fact:
-    cf_named_tunnels_to_remove: "{{ cf_named_tunnels_available | difference(cf_named_tunnels) }}"
+    cf_tunnels_to_remove: "{{ cf_tunnels_available | difference(cf_tunnels) }}"
 
-- name: Remove unused cf_named_tunnels
-  include_tasks: remove-cf_named_tunnels.yml
-  with_items: "{{ cf_named_tunnels_to_remove }}"
+- name: Remove unused cf_tunnels
+  include_tasks: remove_tunnels.yml
+  with_items: "{{ cf_tunnels_to_remove }}"
   when: cf_remove_unused_tunnel
+  tags:
+  - cf_cleanup
 
 - name: Download and install cloudflared
   include_tasks: install.yml
+  tags:
+  - cf_configure
 
-- name: Install cloudflared as a systemd service
-  include_tasks: configure_systemd.yml
-  with_dict: "{{ cf_named_tunnels }}"
+- name: Create systemd service template for cloudlfared
+  include_tasks:
+    file: configure_systemd.yml
+    apply:
+      tags: cf_configure
+  loop: "{{ cf_tunnels | dict2items }}"
+  loop_control:
+    loop_var: cf_tunnel
   when: not cf_install_only and cf_init_system == "systemd"
+  tags:
+  - cf_configure
 
 - name: Install cloudflared as a system-v service
-  include_tasks: configure_initv.yml
-  with_dict: "{{ cf_named_tunnels }}"
+  include_tasks:
+    file: configure_initv.yml
+    apply:
+      tags: cf_configure
+  loop: "{{ cf_tunnels | dict2items }}"
+  loop_control:
+    loop_var: cf_tunnel
   when: not cf_install_only and cf_init_system == "initv"
+  tags:
+  - cf_configure
+
+- name: Configure and start tunnel services
+  include_tasks:
+    file: configure_tunnels.yml
+    apply:
+      tags: cf_configure
+  loop: "{{ cf_tunnels | dict2items }}"
+  loop_control:
+    loop_var: cf_tunnel
+  no_log: True
+  tags:
+  - cf_configure
+
+- name: Start routing of traffic
+  include_tasks:
+    file: create_routes.yml
+    apply:
+      tags: cf_routing
+  loop: "{{ cf_tunnels | dict2items }}"
+  loop_control:
+    loop_var: cf_tunnel
+  tags:
+  - cf_routing
 
 - name: Add ssh proxy for all servers in the ssh client config
-  include_tasks: ssh_client_config.yml
+  include_tasks:
+    file: ssh_client_config.yml
+    apply:
+      tags: cf_client_config
   loop: "{{ groups['servers'] }}"
   when: cf_ssh_client_config
+  tags:
+  - cf_client_config
 
 - name: Remove setup certificate
   include_tasks: remove_setup_certificate.yml
