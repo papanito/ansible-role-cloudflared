@@ -307,6 +307,7 @@ References:
 - [ssh-guide] - ssh connections with cloudflared
 - [cli-args] - command-line arguments
 - [config] - The configuration file format uses YAML syntax
+
 ## License
 
 This is Free Software, released under the terms of the Apache v2 license.
@@ -324,7 +325,7 @@ Written by [Papanito](https://wyssmann.com) - [Gitlab](https://gitlab.com/papani
 [ingress rules]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress
 [downloads]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation
 [ssh-guide]: https://developers.cloudflare.com/cloudflare-one/tutorials/ssh
-[ssh-guide-client]: https://developers.cloudflare.com/access/ssh/ssh-guide/#2-authenticate-the-cloudflare-daemon
+[ssh-guide-client]: https://developers.cloudflare.com/cloudflare-one/tutorials/ssh#connect-from-a-client-machine
 [config]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/config
 [cli-args]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/config
 [authenticate-the-cloudflare-daemon]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/setup
