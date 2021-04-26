@@ -40,6 +40,7 @@
   loop: "{{ cf_tunnels | dict2items }}"
   loop_control:
     loop_var: cf_tunnel
+  no_log: True
   when: not cf_install_only and cf_init_system == "systemd"
   tags:
   - cf_configure
@@ -52,6 +53,7 @@
   loop: "{{ cf_tunnels | dict2items }}"
   loop_control:
     loop_var: cf_tunnel
+  no_log: True
   when: not cf_install_only and cf_init_system == "initv"
   tags:
   - cf_configure
@@ -76,6 +78,7 @@
   loop: "{{ cf_tunnels | dict2items }}"
   loop_control:
     loop_var: cf_tunnel
+  no_log: True
   tags:
   - cf_routing
 

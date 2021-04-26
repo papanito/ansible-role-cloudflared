@@ -7,6 +7,7 @@
     src: cloudflared.service.j2
     dest: "{{ cf_systemd_target_dir }}/{{ systemd_filename }}@.service"
   register: service_template
+  no_log: True
 
 - name: Reload systemd
   ansible.builtin.systemd:

@@ -12,6 +12,7 @@
     group: root
     mode: 0755
   register: service_template
+  no_log: True
 
 - name: Link Stop-Script to /etc/init.d/"{{ systemd_filename }}-{{ tunnel_name }}"
   ansible.builtin.file:

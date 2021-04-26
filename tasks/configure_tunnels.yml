@@ -24,7 +24,6 @@
   register: tunnel_credentials
   no_log: True
 
-
 - block:
   - name: Ensure systemd service {{ cf_tunnel.key }} is running
     systemd:
