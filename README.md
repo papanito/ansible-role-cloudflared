@@ -144,7 +144,7 @@ These are parameters required to create the system service
 |`cf_cert_location`|Location of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
 |`cf_cert_content`|Content of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
 |`cf_tunnels`|[Mandatory] List of tunnel-services, each one defining [Cloudflare parameters](#cloudflare-parameters)|-|
-|`cf_credentials_dir`|Location where put [Credential files]||
+|`cf_warp_routing`|Allow users to connect to internal services using WARP, details see [warp-routing]|`false`|
 
 It's recommended to use [named tunnels] for `cf_tunnels` which require [Cloudflare named tunnel parameters](#cloudflare-named-tunnel-parameters) but you can also use [Cloudflare legacy tunnel parameters](#cloudflare-legacy§-tunnel-parameters)
 
@@ -330,3 +330,4 @@ Written by [Papanito](https://wyssmann.com) - [Gitlab](https://gitlab.com/papani
 [cli-args]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/config
 [authenticate-the-cloudflare-daemon]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/setup
 [systemd-unit-template]: https://fedoramagazine.org/systemd-template-unit-files/ssh-guide-client
+[warp-routing]: https://developers.cloudflare.com/cloudflare-one/tutorials/warp-to-tunnel#configure-and-run-the-tunnel
