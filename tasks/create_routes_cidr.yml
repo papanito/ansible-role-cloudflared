@@ -1,0 +1,8 @@
+---
+- name: Create CIDR entry '{{ cf_cidr_entry }}' for tunnel '{{ cf_tunnel.key }}'
+  command: cloudflared tunnel route ip add {{ cf_cidr_entry }} {{ cf_tunnel.key }}
+  register: create_cidr
+  ignore_errors: true
+- name: Show command output
+  ansible.builtin.debug:
+    msg: "{{ create_cidr.stdout }}{{ create_cidr.stderr }}"
