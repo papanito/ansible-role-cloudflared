@@ -5,3 +5,11 @@
     loop_var: cf_dns_entry
   tags:
   - cf_routing
+
+- name: Create CIDR routing entries
+  include_tasks: create_routes_cidr.yml
+  loop: "{{ cf_tunnel.value.routes.cidr }}"
+  loop_control:
+    loop_var: cf_cidr_entry
+  tags:
+    - cf_routing
