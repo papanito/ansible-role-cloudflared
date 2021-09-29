@@ -1,14 +1,31 @@
-- name: Check if file '{{ daemon_location }}' exists
-  ansible.builtin.stat:
-    path: "{{ daemon_location }}"
-    checksum_algorithm: sha256
-  register: stat_result
-- name: Unarchive {{ cf_download_baseurl }}/{{ cf_binary_filename }} to {{ cf_install_target_dir }}
-  unarchive:
-    src: "{{ cf_download_baseurl }}/{{ cf_binary_filename }}"
-    dest: "{{ cf_install_target_dir }}"
-    remote_src: yes
-  when: not stat_result.stat.exists or cf_force_install
+- block:
+  - name: Add Cloudflare repository GPG key
+    ansible.builtin.apt_key:
+      url: "{{ cf_repository_key_url }}"
+      state: present
+  - name: Add Cloudflare repository to apt sources list
+    ansible.builtin.apt_repository:
+      repo: "{{ cf_repository }}"
+      state: present
+  - name: Install Cloudflared
+    ansible.builtin.apt:
+      update_cache: yes
+      name: cloudflared
+      state: latest
+  when: (ansible_distribution == "Debian" or ansible_distribution == "Ubuntu") and cf_os_package_enable
+- block:
+  - name: Check if file '{{ daemon_location }}' exists
+    ansible.builtin.stat:
+      path: "{{ daemon_location }}"
+      checksum_algorithm: sha256
+    register: stat_result
+  - name: Unarchive {{ cf_download_baseurl }}/{{ cf_binary_filename }} to {{ cf_install_target_dir }}
+    unarchive:
+      src: "{{ cf_download_baseurl }}/{{ cf_binary_filename }}"
+      dest: "{{ cf_install_target_dir }}"
+      remote_src: yes
+    when: not stat_result.stat.exists or cf_force_install
+  when: (ansible_distribution != "Debian" and ansible_distribution != "Ubuntu") or not cf_os_package_enable
 - name: Create {{ cf_config_dir }} if it does not exist
   ansible.builtin.file:
     path: "{{ cf_config_dir }}"
