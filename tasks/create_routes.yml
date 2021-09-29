@@ -13,3 +13,4 @@
     loop_var: cf_cidr_entry
   tags:
     - cf_routing
+  when: cf_tunnel.value.routes.cidr is defined
