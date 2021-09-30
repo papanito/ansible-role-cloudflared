@@ -131,6 +131,9 @@ The following parameters control the installation and/or un-installation
 |`cf_remove_setup_certificate`|Remove cert.pem after installing the service|`false`|
 |`cf_credential_file_base`|Folder where to place credential files|`/root/.cloudflared/`|
 |`cf_config_dir`|Folder where to place cloudflare configuration files|`/etc/cloudflared`|
+|`cf_os_package_enable`|Use OS packaging system and Cloudflare package repository (currently just Debian/Ubuntu)|`false`|
+|`cf_repository_key_url`|If cf_os_package_enable is true, url of the GPG key for the apt repository | `https://pkg.cloudflare.com/pubkey.gpg` |
+|`cf_repository`|If cf_os_package_enable is true, url for the Cloudflare apt repository | `deb http://pkg.cloudflare.com/ {{ ansible_distribution_release }} main` |
 
 ### Cloudflared service parameters
 
@@ -157,6 +160,8 @@ It's recommended to use [named tunnels] for `cf_tunnels` which require [Cloudfla
         routes:
           dns:
           - "{{ inventory_hostname }}"
+          cidr:
+          - "192.168.42.0/24"
         account_tag:  !vault....
         tunnel_secret: !vault....
         tunnel_id: !vault....
@@ -166,7 +171,7 @@ It's recommended to use [named tunnels] for `cf_tunnels` which require [Cloudfla
           - hostname: hello.mycompany.com
             service: hello_world
           - hostname: ssh.mycompany.com
-            service: ssh://localhost:22  - service: http_status:404
+            service: ssh://localhost:22
           - service: http_status:404
 ```
 
@@ -180,9 +185,15 @@ The `key` of the tunnel shall match the of `tunnel_id`.
 |`ingress`|[Mandatory] [ingress rules] for the tunnel|-|
 |`routes`|List of routes which shall be created. It allows a list for `dns`-routes at the moment (see example above)|`-`|
 
-#### DNS Routes
+#### Routes
+
+##### DNS
 
 `dns` routes expect a list of `CNAME`'s to be created as [described here¨](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/routing-to-tunnel/dns). If the `CNAME` already exists the task will be skipped but no error thrown. Also only add `CNAME` not a FQDN as the `FQDN` is determined by `cloudlfared`.
+
+##### Private Network
+
+`private network` routes expect a list of `CIDR`'s to be created as [described here](https://developers.cloudflare.com/cloudflare-one/tutorials/warp-to-tunnel). The playbook loop on the list to execute `cloudflared tunnel route ip add {{ cf_cidr_entry }} {{ cf_tunnel.key }}`. If the `CIDR` already exists, an error will thrown but ignored.
 
 ### Cloudflare single service parameters
 
