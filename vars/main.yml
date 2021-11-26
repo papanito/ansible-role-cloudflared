@@ -16,6 +16,10 @@ cf_binaries:
     filename_tgz: cloudflared-stable-linux-arm.tgz
     filename_deb: cloudflared-stable-linux-arm.deb
     filename_rpm: cloudflared-stable-linux-arm.rpm
+  aarch64:
+    filename_tgz: cloudflared-stable-linux-arm64.tgz
+    filename_deb: cloudflared-stable-linux-arm64.deb
+    filename_rpm: cloudflared-stable-linux-arm64.rpm
 
 ## common values
 cf_systemd_target_dir: /etc/systemd/system/
