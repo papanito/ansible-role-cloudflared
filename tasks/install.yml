@@ -25,6 +25,12 @@
       dest: "{{ cf_install_target_dir }}"
       remote_src: yes
     when: not stat_result.stat.exists or cf_force_install
+  - name: Ensure cloudflared is executable
+    ansible.builtin.file:
+      path: "{{ cf_install_target_dir }}/{{ cf_binary_name }}"
+      owner: "{{ cf_systemd_user }}"
+      group: "{{ cf_systemd_group }}"
+      mode: "0744"
   when: (ansible_distribution != "Debian" and ansible_distribution != "Ubuntu") or not cf_os_package_enable
 - name: Create {{ cf_config_dir }} if it does not exist
   ansible.builtin.file:
