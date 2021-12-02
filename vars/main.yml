@@ -27,5 +27,6 @@ cf_initv_target_dir: /etc/init.d/
 cf_install_target_dir: /usr/bin
 cf_config_dir: /etc/cloudflared
 cf_cert_name: cert.pem
+cf_binary_name: cloudflared
 
 ssh_config_file: "~/.ssh/config"

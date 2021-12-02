@@ -8,7 +8,7 @@
 # Description:       cloudflared tunnel for {{ tunnel_name }}
 ### END INIT INFO
 
-SCRIPT="cloudflared tunnel --config {{ cf_config_dir }}/{{ tunnel_name }}.yml run {{ tunnel_name }}"
+SCRIPT="{{ cf_binary_name }} tunnel --config {{ cf_config_dir }}/{{ tunnel_name }}.yml run {{ tunnel_name }}"
 RUNAS={{ cf_systemd_user }}
 
 PIDFILE={{ initv_pid_file }}

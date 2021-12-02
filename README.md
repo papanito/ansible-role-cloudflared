@@ -134,6 +134,7 @@ The following parameters control the installation and/or un-installation
 |`cf_os_package_enable`|Use OS packaging system and Cloudflare package repository (currently just Debian/Ubuntu)|`false`|
 |`cf_repository_key_url`|If cf_os_package_enable is true, url of the GPG key for the apt repository | `https://pkg.cloudflare.com/pubkey.gpg` |
 |`cf_repository`|If cf_os_package_enable is true, url for the Cloudflare apt repository | `deb http://pkg.cloudflare.com/ {{ ansible_distribution_release }} main` |
+|`cf_binary_name`|Name of the cloudflare daemon binary - change only if you know what you are doing|`cloudflared`|
 
 ### Cloudflared service parameters
 
