@@ -40,10 +40,10 @@ jobs:
       - name: Set current version
         run: echo $RELEASE_VERSION > ./VERSION
       - name: Create changelog
-        run: auto-changelog --ignore-commit-pattern "\[?ci|docu|meta\]?|fixup" --release-summary 
+        run: auto-changelog --ignore-commit-pattern "\[?ci|docu|Merge|meta\]?|fixup" --release-summary 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "[meta] Update changelog, bump version"
+          commit_message: "meta: Update changelog, bump version"
           file_pattern: ./VERSION ./CHANGELOG.md
           commit_user_name: My GitHub Actions Bot
           commit_user_email: ci@wyssmann.com
