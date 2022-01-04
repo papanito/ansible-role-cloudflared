@@ -46,6 +46,9 @@ tag: {{ cf_tunnel.value.tag }}
 {% if cf_tunnel.value.loglevel is defined %}
 loglevel: {{ cf_tunnel.value.loglevel }}
 {% endif %}
+{% if cf_tunnel.value.protocol is defined %}
+protocol: {{ cf_tunnel.value.protocol }}
+{% endif %}
 {% if cf_tunnel.value.proto_loglevel is defined %}
 proto-loglevel: {{ cf_tunnel.value.proto_loglevel }}
 {% endif %}
