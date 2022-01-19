@@ -16,6 +16,8 @@ jobs:
       uses: ansible/ansible-lint-action@master
       with:
         targets: "**/*.yml"
+        override-deps: |
+          ansible-lint==5.3.2
     - name: Install Dependencies
       run: pip install ansible
     - name: Create ansible.cfg with correct roles_path
