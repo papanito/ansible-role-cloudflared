@@ -1,0 +1,5 @@
+all:
+  hosts:
+    testnode:
+      ansible_host: static.222.157.21.65.clients.your-server.de
+      ansible_user: root
