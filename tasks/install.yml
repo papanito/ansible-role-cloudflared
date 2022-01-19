@@ -36,7 +36,7 @@
   ansible.builtin.file:
     path: "{{ cf_config_dir }}"
     state: directory
-    mode: 0744
+    mode: 0755
 - block:
   - name: Login to cloudflare using standard way (browser window)
     ansible.builtin.command: cloudflared login
