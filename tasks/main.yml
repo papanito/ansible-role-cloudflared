@@ -5,6 +5,8 @@
     daemon_location: "{{ cf_install_target_dir }}/cloudflared"
     cf_binary_filename: "{{ cf_binaries[ansible_machine].filename_tgz }}"
     systemd_filename: "cloudflared"
+  tags:
+  - cf_cleanup
 
 - name: Populate service facts
   service_facts:
