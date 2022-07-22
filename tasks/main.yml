@@ -7,6 +7,7 @@
     systemd_filename: "cloudflared"
   tags:
   - cf_cleanup
+  - cf_configure
 
 - name: Populate service facts
   service_facts:

@@ -1,10 +1,20 @@
+- name: Create lb entries
+  include_tasks: create_routes_lb.yml
+  loop: "{{ cf_tunnel.value.routes.lb }}"
+  loop_control:
+    loop_var: cf_lb_entry
+  tags:
+    - cf_routing
+  when: cf_tunnel.value.routes.lb is defined
+
 - name: Create dns entries
   include_tasks: create_routes_dns.yml
   loop: "{{ cf_tunnel.value.routes.dns }}"
   loop_control:
     loop_var: cf_dns_entry
   tags:
-  - cf_routing
+    - cf_routing
+  when: cf_tunnel.value.routes.dns is defined
 
 - name: Create CIDR routing entries
   include_tasks: create_routes_cidr.yml

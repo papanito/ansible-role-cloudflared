@@ -160,9 +160,12 @@ It's recommended to use [named tunnels] for `cf_tunnels` which require [Cloudfla
       test:
         routes:
           dns:
-          - "{{ inventory_hostname }}"
+            - "{{ inventory_hostname }}"
           cidr:
-          - "192.168.42.0/24"
+            - "192.168.42.0/24"
+          lb:
+            - hostname: website.mycompany.com
+              poolname: bzh-west1.website.mycompany.com
         account_tag:  !vault....
         tunnel_secret: !vault....
         tunnel_id: !vault....
@@ -195,6 +198,10 @@ The `key` of the tunnel shall match the of `tunnel_id`.
 ##### Private Network
 
 `private network` routes expect a list of `CIDR`'s to be created as [described here](https://developers.cloudflare.com/cloudflare-one/tutorials/warp-to-tunnel). The playbook loop on the list to execute `cloudflared tunnel route ip add {{ cf_cidr_entry }} {{ cf_tunnel.key }}`. If the `CIDR` already exists, an error will thrown but ignored.
+
+##### Load Balancer
+
+`lb` routes expect a list of existing cloudflared load balancer (plus its pool) to route tunnel on as [described here](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/routing-to-tunnel/lb/). The playbook loop on the list to execute `cloudflared tunnel route lb {{ cf_tunnel.key }} {{ cf_lb_entry.host_name }} {{ cf_lb_entry.pool_name }}`. If the tunnel is already bind into the pool, an ignored error will throw.
 
 ### Cloudflare single service parameters
 
