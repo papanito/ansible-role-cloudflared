@@ -16,5 +16,6 @@ cf_ssh_client_config_group: ""
 cf_credentials_dir: "/root/.cloudflared/"
 
 cf_os_package_enable: false
-cf_repository_key_url: "https://pkg.cloudflare.com/pubkey.gpg"
-cf_repository: "deb http://pkg.cloudflare.com/ {{ ansible_distribution_release }} main"
+cf_repository_key_url: https://pkg.cloudflare.com/cloudflare-main.gpg
+cf_repository_key_install_path: /usr/share/keyrings/cloudflare-main.gpg
+cf_repository: "deb [signed-by={{ cf_repository_key_install_path }}] https://pkg.cloudflare.com/cloudflared {{ ansible_distribution_release }} main"
