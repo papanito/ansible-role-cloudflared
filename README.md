@@ -133,7 +133,8 @@ The following parameters control the installation and/or un-installation
 |`cf_config_dir`|Folder where to place cloudflare configuration files|`/etc/cloudflared`|
 |`cf_os_package_enable`|Use OS packaging system and Cloudflare package repository (currently just Debian/Ubuntu)|`false`|
 |`cf_repository_key_url`|If cf_os_package_enable is true, url of the GPG key for the apt repository | `https://pkg.cloudflare.com/pubkey.gpg` |
-|`cf_repository`|If cf_os_package_enable is true, url for the Cloudflare apt repository | `deb http://pkg.cloudflare.com/ {{ ansible_distribution_release }} main` |
+|`cf_repository_key_install_path`|If cf_os_package_enable is true, path where to instal the GPG key for the apt repository | `/usr/share/keyrings/cloudflare-main.gpg` |
+|`cf_repository`|If cf_os_package_enable is true, url for the Cloudflare apt repository | `deb [signed-by={{ cf_repository_key_install_path }}] https://pkg.cloudflare.com/cloudflared {{ ansible_distribution_release }} main` |
 |`cf_binary_name`|Name of the cloudflare daemon binary - change only if you know what you are doing|`cloudflared`|
 
 ### Cloudflared service parameters

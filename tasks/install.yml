@@ -2,6 +2,7 @@
   - name: Add Cloudflare repository GPG key
     ansible.builtin.apt_key:
       url: "{{ cf_repository_key_url }}"
+      keyring: "{{ cf_repository_key_install_path }}"
       state: present
   - name: Add Cloudflare repository to apt sources list
     ansible.builtin.apt_repository:
