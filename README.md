@@ -122,7 +122,7 @@ The following parameters control the installation and/or un-installation
 
 |Parameter|Description|Default Value|
 |---------|-----------|-------------|
-|`cf_download_baseurl`|Base url for `cloudflare` binaries|https://bin.equinox.io/c/VdrWdbjqyF/|
+|`cf_download_baseurl`|Base url for `cloudflare` binaries|https://github.com/cloudflare/cloudflared/releases/latest/download/|
 |`cf_install_only`|Set to `true` if you only want to install the binary without any configuration or login|`false`|
 |`cf_ssh_client_config`|Set to `true` if you want to configure the proxy configuration for your [ssh-guide-client], see [SSH Client config](#ssh-client-config)|`false`|
 |`cf_ssh_client_config_group`|Name of the inventory group for which the ssh proxy config shall be created, see [SSH Client config](#ssh-client-config)|``|
@@ -194,7 +194,7 @@ The `key` of the tunnel shall match the of `tunnel_id`.
 
 ##### DNS
 
-`dns` routes expect a list of `CNAME`'s to be created as [described here¨](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/routing-to-tunnel/dns). If the `CNAME` already exists the task will be skipped but no error thrown. Also only add `CNAME` not a FQDN as the `FQDN` is determined by `cloudlfared`.
+`dns` routes expect a list of `CNAME`'s to be created as [described here](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/routing-to-tunnel/dns). If the `CNAME` already exists the task will be skipped but no error thrown. Also only add `CNAME` not a FQDN as the `FQDN` is determined by `cloudlfared`.
 
 ##### Private Network
 
@@ -206,7 +206,7 @@ The `key` of the tunnel shall match the of `tunnel_id`.
 
 ### Cloudflare single service parameters
 
-As with previous versions of this roles you can use the [single service configuration style](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress#single-service-configuration)
+As with previous versions of this roles you can use the [single service configuration style][single service]
 
 > If you need to proxy traffic to only one local service, you can do so using the config file. As an alternative, you can set up single-service configuration
 
@@ -352,3 +352,5 @@ Written by [Papanito](https://wyssmann.com) - [Gitlab](https://gitlab.com/papani
 [authenticate-the-cloudflare-daemon]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/setup
 [systemd-unit-template]: https://fedoramagazine.org/systemd-template-unit-files/ssh-guide-client
 [warp-routing]: https://developers.cloudflare.com/cloudflare-one/tutorials/warp-to-tunnel#configure-and-run-the-tunnel
+[1]: https://developers.cloudflare.com/cloudflare-one/tutorials/ssh/
+[single service]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress#single-service-configuration)
