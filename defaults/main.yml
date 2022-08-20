@@ -5,7 +5,7 @@ cf_systemd_user: root
 cf_systemd_group: root
 cf_remove_setup_certificate: False
 
-cf_download_baseurl: https://bin.equinox.io/c/VdrWdbjqyF/
+cf_download_baseurl: https://github.com/cloudflare/cloudflared/releases/latest/download/
 cf_download_folder: ./download
 cf_install_only: False
 cf_force_install: False

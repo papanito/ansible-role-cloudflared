@@ -5,21 +5,21 @@
 ## currently only linux bin, no deb or rpm
 cf_binaries:
   x86_64:
-    filename_tgz: cloudflared-stable-linux-amd64.tgz
-    filename_deb: cloudflared-stable-linux-amd64.deb
-    filename_rpm: cloudflared-stable-linux-amd64.rpm
+    filename_tgz: cloudflared-linux-amd64.tgz
+    filename_deb: cloudflared-linux-amd64.deb
+    filename_rpm: cloudflared-linux-amd64.rpm
   x86:
-    filename_tgz: cloudflared-stable-linux-386.tgz
-    filename_deb: cloudflared-stable-linux-386.deb
-    filename_rpm: cloudflared-stable-linux-386.rpm
+    filename_tgz: cloudflared-linux-386.tgz
+    filename_deb: cloudflared-linux-386.deb
+    filename_rpm: cloudflared-linux-386.rpm
   arm:
-    filename_tgz: cloudflared-stable-linux-arm.tgz
-    filename_deb: cloudflared-stable-linux-arm.deb
-    filename_rpm: cloudflared-stable-linux-arm.rpm
+    filename_tgz: cloudflared-linux-arm.tgz
+    filename_deb: cloudflared-linux-arm.deb
+    filename_rpm: cloudflared-linux-arm.rpm
   aarch64:
-    filename_tgz: cloudflared-stable-linux-arm64.tgz
-    filename_deb: cloudflared-stable-linux-arm64.deb
-    filename_rpm: cloudflared-stable-linux-arm64.rpm
+    filename_tgz: cloudflared-linux-arm64.tgz
+    filename_deb: cloudflared-linux-arm64.deb
+    filename_rpm: cloudflared-linux-arm64.rpm
 
 ## common values
 cf_systemd_target_dir: /etc/systemd/system/
