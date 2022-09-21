@@ -35,6 +35,16 @@
   tags:
   - cf_configure
 
+- name: Tune sysctl for cloudlfared
+  include_tasks:
+    file: configure_sysctl.yml
+    apply:
+      tags: cf_configure
+  no_log: True
+  when: cf_sysctl_buffer_size_increase
+  tags:
+  - cf_configure
+
 - name: Create systemd service template for cloudlfared
   include_tasks:
     file: configure_systemd.yml

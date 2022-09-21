@@ -1,0 +1,13 @@
+- name: Register OS uname
+  shell: uname
+  register: os_uname
+
+- name: "Change sysctl-settings net.core.rmem_max=2500000 (uname: {{ os_uname.stdout }})"
+  sysctl:
+    name: net.core.rmem_max
+    value: 2500000
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  when: os_uname.stdout == "Linux"
