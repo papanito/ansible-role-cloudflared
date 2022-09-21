@@ -150,6 +150,7 @@ These are parameters required to create the system service
 |`cf_cert_content`|Content of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
 |`cf_tunnels`|[Mandatory] List of tunnel-services, each one defining [Cloudflare parameters](#cloudflare-parameters)|-|
 |`cf_warp_routing`|Allow users to connect to internal services using WARP, details see [warp-routing]|`false`|
+|`cf_sysctl_buffer_size_increase`|Increase UDP receive buffer size allowed by the OS (non BSD) - [more details](https://github.com/lucas-clemente/quic-go/wiki/UDP-Receive-Buffer-Size)|`false`|
 
 It's recommended to use [named tunnels] for `cf_tunnels` which require [Cloudflare named tunnel parameters](#cloudflare-named-tunnel-parameters) but you can also use [Cloudflare legacy tunnel parameters](#cloudflare-legacy§-tunnel-parameters)
 
@@ -202,7 +203,7 @@ The `key` of the tunnel shall match the of `tunnel_id`.
 
 ##### Load Balancer
 
-`lb` routes expect a list of existing cloudflared load balancer (plus its pool) to route tunnel on as [described here](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/routing-to-tunnel/lb/). The playbook loop on the list to execute `cloudflared tunnel route lb {{ cf_tunnel.key }} {{ cf_lb_entry.host_name }} {{ cf_lb_entry.pool_name }}`. If the tunnel is already bind into the pool, an ignored error will throw.
+`lb` routes expect a list of existing cloudflared load balancer (plus its pool) to route tunnel on as [described here](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/routing-to-tunnel/lb/). The playbook loop on the list to execute `cloudflared tunnel route lb {{ cf_tunnel.key }} {{ cf_lb_entry.host_name }} {{ cf_lb_entry.pool_name }}`. If the tunnel is already bind into the pool, an ignored error will throw.
 
 ### Cloudflare single service parameters
 
