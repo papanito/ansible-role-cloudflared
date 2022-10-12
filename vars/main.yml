@@ -5,19 +5,19 @@
 ## currently only linux bin, no deb or rpm
 cf_binaries:
   x86_64:
-    filename_tgz: cloudflared-linux-amd64.tgz
+    filename_bin: cloudflared-linux-amd64
     filename_deb: cloudflared-linux-amd64.deb
     filename_rpm: cloudflared-linux-amd64.rpm
   x86:
-    filename_tgz: cloudflared-linux-386.tgz
+    filename_bin: cloudflared-linux-386
     filename_deb: cloudflared-linux-386.deb
     filename_rpm: cloudflared-linux-386.rpm
   arm:
-    filename_tgz: cloudflared-linux-arm.tgz
+    filename_bin: cloudflared-linux-arm
     filename_deb: cloudflared-linux-arm.deb
     filename_rpm: cloudflared-linux-arm.rpm
   aarch64:
-    filename_tgz: cloudflared-linux-arm64.tgz
+    filename_bin: cloudflared-linux-arm64
     filename_deb: cloudflared-linux-arm64.deb
     filename_rpm: cloudflared-linux-arm64.rpm
 

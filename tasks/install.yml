@@ -20,11 +20,10 @@
       path: "{{ daemon_location }}"
       checksum_algorithm: sha256
     register: stat_result
-  - name: Unarchive {{ cf_download_baseurl }}/{{ cf_binary_filename }} to {{ cf_install_target_dir }}
-    unarchive:
-      src: "{{ cf_download_baseurl }}/{{ cf_binary_filename }}"
-      dest: "{{ cf_install_target_dir }}"
-      remote_src: yes
+  - name: Download binary {{ cf_download_baseurl }}/{{ cf_binary_filename }} to {{ cf_install_target_dir }}
+    ansible.builtin.get_url:
+      url: "{{ cf_download_baseurl }}/{{ cf_binary_filename }}"
+      dest: "{{ cf_install_target_dir }}/cloudflared"
     when: not stat_result.stat.exists or cf_force_install
   - name: Ensure cloudflared is executable
     ansible.builtin.file:

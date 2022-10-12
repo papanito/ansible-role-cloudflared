@@ -3,7 +3,7 @@
 - name: Define required variables
   set_fact:
     daemon_location: "{{ cf_install_target_dir }}/cloudflared"
-    cf_binary_filename: "{{ cf_binaries[ansible_machine].filename_tgz }}"
+    cf_binary_filename: "{{ cf_binaries[ansible_machine].filename_bin }}"
     systemd_filename: "cloudflared"
   tags:
   - cf_cleanup
