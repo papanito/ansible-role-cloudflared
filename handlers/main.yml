@@ -1,2 +1,31 @@
 ---
 # handlers file for cloudflared
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+    no_block: false
+
+- name: Link Stop-Script
+  ansible.builtin.file:
+    src: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
+    path: "/etc/{{ item_runlevel }}/K01{{ systemd_filename }}-{{ tunnel_name }}"
+    state: link
+  with_items:
+    - rc0.d
+    - rc1.d
+    - rc6.d
+  loop_control:
+    loop_var: item_runlevel
+
+- name: Link Start-Script
+  ansible.builtin.file:
+    src: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
+    path: "/etc/{{ item_runlevel }}/S99{{ systemd_filename }}-{{ tunnel_name }}"
+    state: link
+  with_items:
+    - rc2.d
+    - rc3.d
+    - rc4.d
+    - rc5.d
+  loop_control:
+    loop_var: item_runlevel

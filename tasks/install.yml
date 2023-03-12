@@ -1,61 +1,65 @@
-- block:
-  - name: Add Cloudflare repository GPG key
-    ansible.builtin.apt_key:
-      url: "{{ cf_repository_key_url }}"
-      keyring: "{{ cf_repository_key_install_path }}"
-      state: present
-  - name: Add Cloudflare repository to apt sources list
-    ansible.builtin.apt_repository:
-      repo: "{{ cf_repository }}"
-      state: present
-  - name: Install Cloudflared
-    ansible.builtin.apt:
-      update_cache: yes
-      name: cloudflared
-      state: latest
+- name: Install cloudflared from repository
   when: (ansible_distribution == "Debian" or ansible_distribution == "Ubuntu") and cf_os_package_enable
-- block:
-  - name: Check if file '{{ daemon_location }}' exists
-    ansible.builtin.stat:
-      path: "{{ daemon_location }}"
-      checksum_algorithm: sha256
-    register: stat_result
-  - name: Download binary {{ cf_download_baseurl }}/{{ cf_binary_filename }} to {{ cf_install_target_dir }}
-    ansible.builtin.get_url:
-      url: "{{ cf_download_baseurl }}/{{ cf_binary_filename }}"
-      dest: "{{ cf_install_target_dir }}/cloudflared"
-    when: not stat_result.stat.exists or cf_force_install
-  - name: Ensure cloudflared is executable
-    ansible.builtin.file:
-      path: "{{ cf_install_target_dir }}/{{ cf_binary_name }}"
-      owner: "{{ cf_systemd_user }}"
-      group: "{{ cf_systemd_group }}"
-      mode: "0744"
+  block:
+    - name: Add Cloudflare repository GPG key
+      ansible.builtin.apt_key:
+        url: "{{ cf_repository_key_url }}"
+        keyring: "{{ cf_repository_key_install_path }}"
+        state: present
+    - name: Add Cloudflare repository to apt sources list
+      ansible.builtin.apt_repository:
+        repo: "{{ cf_repository }}"
+        state: present
+    - name: Install Cloudflared
+      ansible.builtin.apt:
+        update_cache: true
+        name: cloudflared
+        state: latest
+- name: Install cloudflared binary
   when: (ansible_distribution != "Debian" and ansible_distribution != "Ubuntu") or not cf_os_package_enable
+  block:
+    - name: Check if file '{{ daemon_location }}' exists
+      ansible.builtin.stat:
+        path: "{{ daemon_location }}"
+        checksum_algorithm: sha256
+      register: stat_result
+    - name: Download binary {{ cf_download_baseurl }}/{{ cf_binary_filename }} to {{ cf_install_target_dir }}
+      ansible.builtin.get_url:
+        url: "{{ cf_download_baseurl }}/{{ cf_binary_filename }}"
+        dest: "{{ cf_install_target_dir }}/cloudflared"
+        mode: "644"
+      when: not stat_result.stat.exists or cf_force_install
+    - name: Ensure cloudflared is executable
+      ansible.builtin.file:
+        path: "{{ cf_install_target_dir }}/{{ cf_binary_name }}"
+        owner: "{{ cf_systemd_user }}"
+        group: "{{ cf_systemd_group }}"
+        mode: "744"
 - name: Create {{ cf_config_dir }} if it does not exist
   ansible.builtin.file:
     path: "{{ cf_config_dir }}"
     state: directory
-    mode: 0755
-- block:
-  - name: Login to cloudflare using standard way (browser window)
-    ansible.builtin.command: cloudflared login
-    register: login_result
-    when: cf_cert_location is not defined and cf_cert_content is not defined
-  - name: Copy `{{ cf_cert_location }}` to {{ cf_config_dir }}/{{ cf_cert_name }}
-    ansible.builtin.copy:
-      src: "{{ cf_cert_location }}"
-      dest: "{{ cf_config_dir }}/{{ cf_cert_name }}"
-      owner: "{{ cf_systemd_user }}"
-      group: "{{ cf_systemd_group }}"
-      mode: "0640"
-    when: cf_cert_location is defined and cf_cert_content is not defined
-  - name: Write certificate to {{ cf_config_dir }}/{{ cf_cert_name }}
-    ansible.builtin.copy:
-      content: "{{ cf_cert_content }}"
-      dest: "{{ cf_config_dir }}/{{ cf_cert_name }}"
-      owner: "{{ cf_systemd_user }}"
-      group: "{{ cf_systemd_group }}"
-      mode: "0640"
-    when: cf_cert_content is defined
+    mode: "755"
+- name: Install only
   when: not cf_install_only
+  block:
+    - name: Login to cloudflare using standard way (browser window)
+      ansible.builtin.command: cloudflared login
+      register: login_result
+      when: cf_cert_location is not defined and cf_cert_content is not defined
+    - name: Copy `{{ cf_cert_location }}` to {{ cf_config_dir }}/{{ cf_cert_name }}
+      ansible.builtin.copy:
+        src: "{{ cf_cert_location }}"
+        dest: "{{ cf_config_dir }}/{{ cf_cert_name }}"
+        owner: "{{ cf_systemd_user }}"
+        group: "{{ cf_systemd_group }}"
+        mode: "0640"
+      when: cf_cert_location is defined and cf_cert_content is not defined
+    - name: Write certificate to {{ cf_config_dir }}/{{ cf_cert_name }}
+      ansible.builtin.copy:
+        content: "{{ cf_cert_content }}"
+        dest: "{{ cf_config_dir }}/{{ cf_cert_name }}"
+        owner: "{{ cf_systemd_user }}"
+        group: "{{ cf_systemd_group }}"
+        mode: "0640"
+      when: cf_cert_content is defined

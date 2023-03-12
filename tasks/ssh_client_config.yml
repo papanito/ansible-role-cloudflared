@@ -6,13 +6,14 @@
   ansible.builtin.file:
     path: "{{ ssh_config_file }}"
     state: touch
+    mode: "644"
 
 - name: Check if {{ item }} is added to local ssh config
-  shell: grep -c "^Host {{ item }}." {{ ssh_config_file }} || true
+  ansible.builtin.shell: grep -c "^Host {{ item }}." {{ ssh_config_file }} || true
   register: test_grep
 
 - name: Add proxy config for {{ item }} is added to local ssh config
-  lineinfile:
+  when: test_grep.stdout == "0"
+  ansible.builtin.lineinfile:
     dest: "{{ ssh_config_file }}"
     line: "Host {{ item }}.{{ external_domain }}\n   ProxyCommand /usr/bin/cloudflared access ssh --hostname %h"
-  when: test_grep.stdout == "0"

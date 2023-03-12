@@ -1,42 +1,19 @@
+---
 - name: Define required variables for configure
-  set_fact:
+  ansible.builtin.set_fact:
     tunnel_name: "{{ item.key }}"
     initv_pid_file: "/var/run/{{ systemd_filename }}_{{ tunnel_name }}.pid"
     initv_log_file: "/var/log/{{ systemd_filename }}_{{ tunnel_name }}.log"
 
-- name: Install cloudflared service for service '{{ tunnel_name }}' in System-V
+- name: Install cloudflare system-v service for service '{{ tunnel_name }}'
   ansible.builtin.template:
     src: cloudflared.initv.j2
     dest: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
     owner: root
     group: root
-    mode: 0755
+    mode: "755"
   register: service_template
-  no_log: True
-
-- name: Link Stop-Script to /etc/init.d/"{{ systemd_filename }}-{{ tunnel_name }}"
-  ansible.builtin.file:
-    src: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
-    path: "/etc/{{ item_runlevel }}/K01{{ systemd_filename }}-{{ tunnel_name }}"
-    state: link
-  with_items:
-    - rc0.d
-    - rc1.d
-    - rc6.d
-  loop_control:
-    loop_var: item_runlevel
-  when: service_template.changed
-
-- name: "Link Start-Script /etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
-  ansible.builtin.file:
-    src: "/etc/init.d/{{ systemd_filename }}-{{ tunnel_name }}"
-    path: "/etc/{{ item_runlevel }}/S99{{ systemd_filename }}-{{ tunnel_name }}"
-    state: link
-  with_items:
-    - rc2.d
-    - rc3.d
-    - rc4.d
-    - rc5.d
-  loop_control:
-    loop_var: item_runlevel
-  when: service_template.changed
+  no_log: true
+  notify:
+    - Link Stop-Script
+    - Link Start-Script

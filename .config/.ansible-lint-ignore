@@ -1,0 +1,8 @@
+tasks/ssh_client_config.yml no-changed-when
+tasks/create_routes_dns.yml no-changed-when
+tasks/create_routes_lb.yml no-changed-when
+tasks/create_routes_cidr.yml no-changed-when
+tasks/configure_sysctl.yml no-changed-when
+tasks/configure_sysctl.yml command-instead-of-shell
+tasks/install.yml no-changed-when
+tasks/install.yml package-latest

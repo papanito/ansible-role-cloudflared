@@ -2,7 +2,7 @@
   ansible.builtin.file:
     path: "{{ cf_target_dir }}"
     state: directory
-    mode: 0755
+    mode: "755"
     group: root
     owner: root
   loop:
@@ -15,39 +15,43 @@
   ansible.builtin.template:
     src: config.yml.j2
     dest: "{{ cf_config_dir }}/{{ cf_tunnel.key }}.yml"
+    mode: "644"
   register: tunnel_config
 
 - name: Authentication file '{{ cf_tunnel.key }}'
   ansible.builtin.template:
     src: tunnel.json.j2
     dest: "{{ cf_credentials_dir }}/{{ cf_tunnel.value.tunnel_id }}.json"
+    mode: "644"
   register: tunnel_credentials
-  no_log: True
+  no_log: true
 
-- block:
-  - name: Ensure systemd service {{ cf_tunnel.key }} is running
-    systemd:
-      name: "{{ systemd_filename }}@{{ cf_tunnel.key }}"
-      state: started
-      enabled: yes
-  - name: Restart systemd service {{ cf_tunnel.key }}
-    systemd:
-      name: "{{ systemd_filename }}@{{ cf_tunnel.key }}"
-      state: restarted
-      enabled: yes
-    when: (tunnel_config.changed or tunnel_credentials.changed )
+- name: Do Systemd config
   when: cf_init_system == "systemd"
+  block:
+    - name: Ensure systemd service {{ cf_tunnel.key }} is running
+      ansible.builtin.systemd:
+        name: "{{ systemd_filename }}@{{ cf_tunnel.key }}"
+        state: started
+        enabled: true
+    - name: Restart systemd service {{ cf_tunnel.key }}
+      ansible.builtin.systemd:
+        name: "{{ systemd_filename }}@{{ cf_tunnel.key }}"
+        state: restarted
+        enabled: true
+      when: (tunnel_config.changed or tunnel_credentials.changed)
 
-- block:
-  - name: Ensure init-v service {{ cf_tunnel.key }} is running
-    systemd:
-      name: "{{ systemd_filename }}-{{ cf_tunnel.key }}"
-      state: started
-      enabled: yes
-  - name: Restart init-v service {{ cf_tunnel.key }}
-    systemd:
-      name: "{{ systemd_filename }}-{{ cf_tunnel.key }}"
-      state: restarted
-      enabled: yes
-    when: (tunnel_config.changed or tunnel_credentials.changed )
+- name: Do System-V config
   when: cf_init_system == "initv"
+  block:
+    - name: Ensure init-v service {{ cf_tunnel.key }} is running
+      ansible.builtin.systemd:
+        name: "{{ systemd_filename }}-{{ cf_tunnel.key }}"
+        state: started
+        enabled: true
+    - name: Restart init-v service {{ cf_tunnel.key }}
+      ansible.builtin.systemd:
+        name: "{{ systemd_filename }}-{{ cf_tunnel.key }}"
+        state: restarted
+        enabled: true
+      when: (tunnel_config.changed or tunnel_credentials.changed)

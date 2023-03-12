@@ -1,5 +1,5 @@
 - name: Create lb '{{ cf_lb_entry }}' for tunnel '{{ cf_tunnel.key }}'
-  command: "cloudflared tunnel route lb {{ cf_tunnel.key }} {{ cf_lb_entry.hostname }} {{ cf_lb_entry.poolname }}"
+  ansible.builtin.command: "cloudflared tunnel route lb {{ cf_tunnel.key }} {{ cf_lb_entry.hostname }} {{ cf_lb_entry.poolname }}"
   register: create_route
   ignore_errors: true
 - name: Show command output

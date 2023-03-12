@@ -3,20 +3,20 @@
 cf_init_system: systemd
 cf_systemd_user: root
 cf_systemd_group: root
-cf_remove_setup_certificate: False
+cf_remove_setup_certificate: false
 
 cf_download_baseurl: https://github.com/cloudflare/cloudflared/releases/latest/download/
 cf_download_folder: ./download
-cf_install_only: False
-cf_force_install: False
-cf_remove_unused_tunnel: False
-cf_ssh_client_config: False
+cf_install_only: false
+cf_force_install: false
+cf_remove_unused_tunnel: false
+cf_ssh_client_config: false
 cf_ssh_client_config_group: ""
 
 cf_credentials_dir: "/root/.cloudflared/"
 
-cf_os_package_enable: False
-cf_sysctl_buffer_size_increase: False
+cf_os_package_enable: false
+cf_sysctl_buffer_size_increase: false
 cf_repository_key_url: https://pkg.cloudflare.com/cloudflare-main.gpg
 cf_repository_key_install_path: /usr/share/keyrings/cloudflare-main.gpg
 cf_repository: "deb [signed-by={{ cf_repository_key_install_path }}] https://pkg.cloudflare.com/cloudflared {{ ansible_distribution_release }} main"

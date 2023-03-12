@@ -1,9 +1,9 @@
 ---
 - hosts: testnode
   remote_user: ansible
-  become: yes
+  become: true
   vars:
-    cf_remove_unused_tunnel: True
+    cf_remove_unused_tunnel: true
     cf_cert_location: /home/aedu/.cloudflared/cert.wyssmann.dev.pem
     cf_tunnels:
       test:

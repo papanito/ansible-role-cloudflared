@@ -1,13 +1,13 @@
 - name: Register OS uname
-  shell: uname
+  ansible.builtin.shell: uname
   register: os_uname
 
-- name: "Change sysctl-settings net.core.rmem_max=2500000 (uname: {{ os_uname.stdout }})"
-  sysctl:
+- name: "Change sysctl-settings net.core.rmem_max=2500000 (uname: {{ os_uname.stdout }})"
+  ansible.posix.sysctl:
     name: net.core.rmem_max
     value: 2500000
-    sysctl_set: yes
+    sysctl_set: true
     state: present
-    reload: yes
-    ignoreerrors: yes
+    reload: true
+    ignoreerrors: true
   when: os_uname.stdout == "Linux"

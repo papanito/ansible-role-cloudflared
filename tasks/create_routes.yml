@@ -1,5 +1,5 @@
 - name: Create lb entries
-  include_tasks: create_routes_lb.yml
+  ansible.builtin.include_tasks: create_routes_lb.yml
   loop: "{{ cf_tunnel.value.routes.lb }}"
   loop_control:
     loop_var: cf_lb_entry
@@ -8,7 +8,7 @@
   when: cf_tunnel.value.routes.lb is defined
 
 - name: Create dns entries
-  include_tasks: create_routes_dns.yml
+  ansible.builtin.include_tasks: create_routes_dns.yml
   loop: "{{ cf_tunnel.value.routes.dns }}"
   loop_control:
     loop_var: cf_dns_entry
@@ -17,7 +17,7 @@
   when: cf_tunnel.value.routes.dns is defined
 
 - name: Create CIDR routing entries
-  include_tasks: create_routes_cidr.yml
+  ansible.builtin.include_tasks: create_routes_cidr.yml
   loop: "{{ cf_tunnel.value.routes.cidr }}"
   loop_control:
     loop_var: cf_cidr_entry

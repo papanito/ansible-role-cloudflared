@@ -1,112 +1,112 @@
 ---
 # tasks file for cloudflared
 - name: Define required variables
-  set_fact:
+  ansible.builtin.set_fact:
     daemon_location: "{{ cf_install_target_dir }}/cloudflared"
     cf_binary_filename: "{{ cf_binaries[ansible_machine].filename_bin }}"
     systemd_filename: "cloudflared"
   tags:
-  - cf_cleanup
-  - cf_configure
+    - cf_cleanup
+    - cf_configure
 
 - name: Populate service facts
-  service_facts:
+  ansible.builtin.service_facts:
 
 - name: Setting cf_tunnels_available
-  set_fact:
+  ansible.builtin.set_fact:
     cf_tunnels_available: "{{ ansible_facts.services | select('match', 'cloudflared@(.+).service|cloudflared-(.*)') | \
                                  map('regex_replace', 'cloudflared@|cloudflared-', '') | map('regex_replace', '.service' '') | list }}"
   tags:
-  - cf_cleanup
+    - cf_cleanup
 
 - name: Setting cf_tunnels to remove
-  set_fact:
+  ansible.builtin.set_fact:
     cf_tunnels_to_remove: "{{ cf_tunnels_available | difference(cf_tunnels) }}"
 
 - name: Remove unused cf_tunnels
-  include_tasks: remove_tunnels.yml
+  ansible.builtin.include_tasks: remove_tunnels.yml
   with_items: "{{ cf_tunnels_to_remove }}"
   when: cf_remove_unused_tunnel
   tags:
-  - cf_cleanup
+    - cf_cleanup
 
 - name: Download and install cloudflared
-  include_tasks: install.yml
+  ansible.builtin.include_tasks: install.yml
   tags:
-  - cf_configure
+    - cf_configure
 
 - name: Tune sysctl for cloudlfared
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: configure_sysctl.yml
     apply:
       tags: cf_configure
-  no_log: True
+  no_log: true
   when: cf_sysctl_buffer_size_increase
   tags:
-  - cf_configure
+    - cf_configure
 
 - name: Create systemd service template for cloudlfared
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: configure_systemd.yml
     apply:
       tags: cf_configure
   loop: "{{ cf_tunnels | dict2items }}"
   loop_control:
     loop_var: cf_tunnel
-  no_log: True
+  no_log: true
   when: not cf_install_only and cf_init_system == "systemd"
   tags:
-  - cf_configure
+    - cf_configure
 
 - name: Install cloudflared as a system-v service
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: configure_initv.yml
     apply:
       tags: cf_configure
   loop: "{{ cf_tunnels | dict2items }}"
   loop_control:
     loop_var: cf_tunnel
-  no_log: True
+  no_log: true
   when: not cf_install_only and cf_init_system == "initv"
   tags:
-  - cf_configure
+    - cf_configure
 
 - name: Configure and start tunnel services
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: configure_tunnels.yml
     apply:
       tags: cf_configure
   loop: "{{ cf_tunnels | dict2items }}"
   loop_control:
     loop_var: cf_tunnel
-  no_log: True
+  no_log: true
   when: not cf_install_only
   tags:
-  - cf_configure
+    - cf_configure
 
 - name: Start routing of traffic
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: create_routes.yml
     apply:
       tags: cf_routing
   loop: "{{ cf_tunnels | dict2items }}"
   loop_control:
     loop_var: cf_tunnel
-  no_log: True
+  no_log: true
   when: not cf_install_only
   tags:
-  - cf_routing
+    - cf_routing
 
 - name: Add ssh proxy for all servers in the ssh client config
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: ssh_client_config.yml
     apply:
       tags: cf_client_config
   loop: "{{ groups['servers'] }}"
   when: cf_ssh_client_config
   tags:
-  - cf_client_config
+    - cf_client_config
 
 - name: Remove setup certificate
-  include_tasks: remove_setup_certificate.yml
+  ansible.builtin.include_tasks: remove_setup_certificate.yml
   when: cf_remove_setup_certificate

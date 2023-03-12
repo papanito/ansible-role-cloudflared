@@ -2,9 +2,9 @@
   ansible.builtin.systemd:
     name: "{{ systemd_filename }}@{{ item }}"
     state: stopped
-    enabled: no
-    daemon_reload: yes
-    no_block: no
+    enabled: false
+    daemon_reload: true
+    no_block: false
   when: cf_init_system == "systemd"
 
 - name: Stop service "{{ systemd_filename }}-{{ item }}"

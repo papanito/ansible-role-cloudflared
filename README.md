@@ -271,7 +271,7 @@ The following example installs an [named tunnel] `servers` with an ingress to `{
 ```yaml
 - hosts: servers
   remote_user: ansible
-  become: yes
+  become: true
   vars:
     cf_cert_location: /home/papanito/.cloudflared/cert.mycompany.com.pem
     cf_tunnels:
@@ -299,8 +299,8 @@ The following example simply downloads `cloudflared` on your local machine and c
 - hosts: localhost
   remote_user: papanito #your local user who has admin
   vars:
-    cf_install_only: True
-    cf_ssh_client_config: True
+    cf_install_only: true
+    cf_ssh_client_config: true
     cf_ssh_client_config_group: servers
   roles:
     - papanito.cloudflared

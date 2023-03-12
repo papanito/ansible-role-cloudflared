@@ -1,16 +1,13 @@
 - name: Define required variables for configure
-  set_fact:
+  ansible.builtin.set_fact:
     tunnel_name: "{{ cf_tunnel.key }}"
 
 - name: Install cloudflared service for service '{{ tunnel_name }}' in systemd
   ansible.builtin.template:
     src: cloudflared.service.j2
     dest: "{{ cf_systemd_target_dir }}/{{ systemd_filename }}@.service"
+    mode: "644"
   register: service_template
-  no_log: True
-
-- name: Reload systemd
-  ansible.builtin.systemd:
-    daemon_reload: yes
-    no_block: no
-  when: service_template.changed
+  no_log: true
+  notify:
+    - Reload systemd

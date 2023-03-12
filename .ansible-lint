@@ -1,3 +1,8 @@
 exclude_paths:
-  ./.travis.yml
-  tests/*
+  - tests/*
+  - .github/**
+skip_list:
+  - name[template]
+  - command-instead-of-shell  # Use shell only when shell functionality is required.
+  - no-changed-when  # Commands should not change things if nothing needs doing.
+  - package-latest  # Package installs should not use latest.
