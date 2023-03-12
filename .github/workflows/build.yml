@@ -2,11 +2,11 @@ name: master and pr builds
 
 on:
   push:
-    branches: 
-    - master
+    branches:
+      - main
   pull_request:
-    branches: 
-    - master
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -14,16 +14,16 @@ jobs:
     name: Ansible lint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Lint Ansible Playbook
-      uses: ansible/ansible-lint-action@main
-      with:
-        targets: "**/*.yml"
-        override-deps: |
-          ansible-lint==5.3.2
-    - name: Install Dependencies
-      run: pip install ansible
-    - name: Create ansible.cfg with correct roles_path
-      run: printf '[defaults]\nroles_path=../:./' >ansible.cfg
-    - name: Run ansible syntax-check
-      run: ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+      - uses: actions/checkout@v3
+      - name: Lint Ansible Playbook
+        uses: ansible/ansible-lint-action@main
+        with:
+          targets: "**/*.yml"
+          override-deps: |
+            ansible-lint==5.3.2
+      - name: Install Dependencies
+        run: pip install ansible
+      - name: Create ansible.cfg with correct roles_path
+        run: printf '[defaults]\nroles_path=../:./' >ansible.cfg
+      - name: Run ansible syntax-check
+        run: ansible-playbook tests/test.yml -i tests/inventory --syntax-check
