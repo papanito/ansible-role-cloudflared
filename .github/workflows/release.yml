@@ -7,6 +7,6 @@ on:
 
 jobs:
   call-workflow-passing-data:
-    uses: papanito/github-actions-workflows/.github/workflows/ansible-roles-build.yml@main
+    uses: papanito/github-actions-workflows/.github/workflows/ansible-roles-release.yml@main
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
