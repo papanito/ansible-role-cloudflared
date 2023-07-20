@@ -60,6 +60,9 @@ edge-bind-address: {{ cf_tunnel.value.edge_bind_address }}
 {% if cf_tunnel.value.grace_period is defined %}
 grace-period: {{ cf_tunnel.value.grace_period }}
 {% endif %}
+{% if cf_tunnel.value.region is defined %}
+region: {{ cf_tunnel.value.region }}
+{% endif %}
 {% if (cf_tunnel.value.warp_routing | default(false)) %}
 warp-routing:
   enabled: true
