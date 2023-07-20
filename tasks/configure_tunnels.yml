@@ -15,13 +15,6 @@
   loop_control:
     loop_var: cf_target_dir
 
-- name: Create config file for service '{{ tunnel_name }}'
-  ansible.builtin.template:
-    src: config.yml.j2
-    dest: "{{ cf_config_dir }}/{{ tunnel_name }}.yml"
-    mode: "644"
-  register: tunnel_config
-
 - name: Authentication file '{{ tunnel_name }}'
   ansible.builtin.template:
     src: tunnel.json.j2
@@ -30,20 +23,12 @@
   register: tunnel_credentials
   no_log: true
 
-- name: Ensure systemd service {{ tunnel_name }} is running
-  when: cf_init_system == "systemd"
-  ansible.builtin.systemd:
-    name: "{{ systemd_filename }}@{{ tunnel_name }}"
-    state: started
-    enabled: true
+- name: Create config file for service '{{ tunnel_name }}'
+  ansible.builtin.template:
+    src: config.yml.j2
+    dest: "{{ cf_config_dir }}/{{ tunnel_name }}.yml"
+    mode: "644"
+  register: tunnel_config
   notify:
     - Restart systemd service
-
-- name: Ensure init-v service {{ tunnel_name }} is running
-  when: cf_init_system == "initv"
-  ansible.builtin.service:
-    name: "{{ systemd_filename }}-{{ tunnel_name }}"
-    state: started
-    enabled: true
-  notify:
     - Restart init-v service

@@ -31,13 +31,29 @@
     loop_var: item_runlevel
 
 - name: Restart systemd service
+  when: cf_init_system == "systemd"
   ansible.builtin.systemd:
     name: "{{ systemd_filename }}@{{ tunnel_name }}"
     state: restarted
     enabled: true
 
+- name: Start systemd service
+  when: cf_init_system == "systemd"
+  ansible.builtin.systemd:
+    name: "{{ systemd_filename }}@{{ tunnel_name }}"
+    state: started
+    enabled: true
+
 - name: Restart init-v service
+  when: cf_init_system == "initv"
   ansible.builtin.service:
     name: "{{ systemd_filename }}-{{ tunnel_name }}"
     state: restarted
+    enabled: true
+
+- name: Start init-v service
+  when: cf_init_system == "initv"
+  ansible.builtin.service:
+    name: "{{ systemd_filename }}-{{ tunnel_name }}"
+    state: started
     enabled: true

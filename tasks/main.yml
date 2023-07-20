@@ -96,8 +96,6 @@
   when: not cf_install_only
   tags:
     - cf_routing
-  notify:
-    - Restart systemd service
 
 - name: Add ssh proxy for all servers in the ssh client config
   ansible.builtin.include_tasks:
