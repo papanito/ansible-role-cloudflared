@@ -2,13 +2,6 @@
 {% if cf_tunnel.value.hostname is defined %}
 hostname: {{ cf_tunnel.value.hostname }}
 url: {{ cf_tunnel.value.url }}
-{% elif (cf_tunnel.value.cf_warp_routing | default(false)) %}
-tunnel: {{ cf_tunnel.key }}
-credentials-file: {{ cf_credentials_dir }}/{{ cf_tunnel.value.tunnel_id }}.json
-warp-routing:
-  enabled: true
-ingress:
-  {{ cf_tunnel.value.ingress | to_nice_yaml(indent=2) | indent(2) }}
 {% else %}
 tunnel: {{ cf_tunnel.key }}
 credentials-file: {{ cf_credentials_dir }}/{{ cf_tunnel.value.tunnel_id }}.json
@@ -16,7 +9,7 @@ ingress:
   {{ cf_tunnel.value.ingress | to_nice_yaml(indent=2) | indent(2) }}
 {% endif %}
 
-{% if (cf_tunnel.value.cf_logfile | default(true)) %}
+{% if (cf_tunnel.value.logfile | default(true)) %}
 logfile: /var/log/cloudflared_{{ cf_tunnel.key }}.log
 {% endif %}
 {% if cf_tunnel.value.autoupdate_freq is defined %}
@@ -58,7 +51,7 @@ retries: {{ cf_tunnel.value.retries }}
 {% if cf_tunnel.value.no_chunked_encoding is defined %}
 no-chunked-encoding: {{ cf_tunnel.value.no_chunked_encoding }}
 {% endif %}
-{% if (cf_tunnel.value.cf_warp_routing | default(false)) and  cf_tunnel.value.hostname is defined %}
+{% if (cf_tunnel.value.warp_routing | default(false)) and  cf_tunnel.value.hostname is defined %}
 warp-routing:
   enabled: true
 {% endif %}

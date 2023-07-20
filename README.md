@@ -149,7 +149,6 @@ These are parameters required to create the system service
 |`cf_cert_location`|Location of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
 |`cf_cert_content`|Content of the certificate to be copied - see [Authenticate the daemon](#authenticate-the-daemon)|-|
 |`cf_tunnels`|[Mandatory] List of tunnel-services, each one defining [Cloudflare parameters](#cloudflare-parameters)|-|
-|`cf_warp_routing`|Allow users to connect to internal services using WARP, details see [warp-routing]|`false`|
 |`cf_sysctl_buffer_size_increase`|Increase UDP receive buffer size allowed by the OS (non BSD) - [more details](https://github.com/lucas-clemente/quic-go/wiki/UDP-Receive-Buffer-Size)|`false`|
 
 It's recommended to use [named tunnels] for `cf_tunnels` which require [Cloudflare named tunnel parameters](#cloudflare-named-tunnel-parameters) but you can also use [Cloudflare legacy tunnel parameters](#cloudflare-legacy§-tunnel-parameters)
@@ -199,7 +198,7 @@ The `key` of the tunnel shall match the of `tunnel_id`.
 
 ##### Private Network
 
-`private network` routes expect a list of `CIDR`'s to be created as [described here](https://developers.cloudflare.com/cloudflare-one/tutorials/warp-to-tunnel). The playbook loop on the list to execute `cloudflared tunnel route ip add {{ cf_cidr_entry }} {{ cf_tunnel.key }}`. If the `CIDR` already exists, an error will thrown but ignored.
+`private network` routes expect a list of `CIDR`'s to be created as [described here](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/private-net/connect-private-networks/). The playbook loop on the list to execute `cloudflared tunnel route ip add {{ cf_cidr_entry }} {{ cf_tunnel.key }}`. If the `CIDR` already exists, an error will thrown but ignored.
 
 ##### Load Balancer
 
@@ -242,7 +241,8 @@ These are used to configure the parameters per cloudflared service. You still ca
 |`transport_loglevel`|Specifies the verbosity of logs for the transport between cloudflared and the Cloudflare edge. Available levels are: `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `panic`. Any value below warn produces substantial output and should only be used to debug low-level performance issues and protocol quirks - see [docu](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/arguments/#transport-loglevel)|`info`|
 |`retries`|Maximum number of retries for connection/protocol errors. Retries use exponential backoff (retrying at 1, 2, 4, 8, 16 seconds by default) so increasing this value significantly is not recommended - see [docu](https://developers.cloudflare.com/argo-tunnel/reference/arguments/#retries)|`5`|
 |`no_chunked_encoding`|Disables chunked transfer encoding; useful if you are running a WSGI server - see [docu](https://developers.cloudflare.com/argo-tunnel/reference/arguments/#no-chunked-encoding)|`false`|
-|`cf_logfile`|Enables writing a logfile for cloudflared - it will still log to the journal|`true`|
+|`logfile`|Enables writing a logfile for cloudflared - it will still log to the journal|`true`|
+|`warp_routing`|Allow users to connect to internal services using WARP, details see [warp-routing]|`false`|
 
 ## Dependencies
 
