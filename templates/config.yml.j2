@@ -63,6 +63,9 @@ grace-period: {{ cf_tunnel.value.grace_period }}
 {% if cf_tunnel.value.region is defined %}
 region: {{ cf_tunnel.value.region }}
 {% endif %}
+{% if cf_tunnel.value.token is defined %}
+token: {{ cf_tunnel.value.token }}
+{% endif %}
 {% if (cf_tunnel.value.warp_routing | default(false)) %}
 warp-routing:
   enabled: true
