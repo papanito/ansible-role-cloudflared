@@ -37,19 +37,13 @@
     state: started
     enabled: true
   notify:
-  - Restart systemd service
+    - Restart systemd service
 
-- name: Do System-V config
+- name: Ensure init-v service {{ tunnel_name }} is running
   when: cf_init_system == "initv"
-  block:
-    - name: Ensure init-v service {{ tunnel_name }} is running
-      ansible.builtin.systemd:
-        name: "{{ systemd_filename }}-{{ tunnel_name }}"
-        state: started
-        enabled: true
-    - name: Restart init-v service {{ tunnel_name }}
-      ansible.builtin.systemd:
-        name: "{{ systemd_filename }}-{{ tunnel_name }}"
-        state: restarted
-        enabled: true
-      when: (tunnel_config.changed or tunnel_credentials.changed)
+  ansible.builtin.systemd:
+    name: "{{ systemd_filename }}-{{ tunnel_name }}"
+    state: started
+    enabled: true
+  notify:
+    - Restart init-v service
