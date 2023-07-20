@@ -230,7 +230,8 @@ These are used to configure the parameters per cloudflared service. You still ca
 |---------|-----------|-------------|
 |`autoupdate_freq`|Autoupdate frequency - see [docu](https://developers.cloudflare.com/argo-tunnel/reference/arguments/#autoupdate-freq)|`24h`|
 |`edge_ip_version`|Specifies the IP address version (IPv4 or IPv6) used to esablish a connection between cloudflared and the Cloudflare global network. Available values are `auto`, `4`, and `6`|`auto`|
-|`edge_bind_address`|Specifies the outgoing IP address used to establish a connection between cloudflared and the Cloudflare global network.|-|
+|`edge_bind_address`|Specifies the outgoing IP address used to establish a connection between cloudflared and the Cloudflare global network|-|
+|`grace_period`|When cloudflared receives SIGINT/SIGTERM it will stop accepting new requests, wait for in-progress requests to terminate, then shut down. Waiting for in-progress requests will timeout after this grace period, or when a second SIGTERM/SIGINT is received|`30s`|
 |`no_autoupdate`|Disable periodic check for updates, restarting the server with the new version - see [docu](https://developers.cloudflare.com/argo-tunnel/reference/arguments/#lb-pool)|`false`|
 |`no_tls_verify`|Disables TLS verification of the certificate presented by your origin. Will allow any certificate from the origin to be accepted - see [docu](https://developers.cloudflare.com/argo-tunnel/reference/arguments/#no-tls-verify)|-|
 |`origin_ca_pool`|Path to the CA for the certificate of your origin. This option should be used only if your certificate is not signed by Cloudflare - see [docu](https://developers.cloudflare.com/argo-tunnel/reference/arguments/#origin-ca-pool)|-|
