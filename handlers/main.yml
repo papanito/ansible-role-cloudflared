@@ -29,3 +29,9 @@
     - rc5.d
   loop_control:
     loop_var: item_runlevel
+
+- name: Restart systemd service
+  ansible.builtin.systemd:
+    name: "{{ systemd_filename }}@{{ tunnel_name }}"
+    state: restarted
+    enabled: true
