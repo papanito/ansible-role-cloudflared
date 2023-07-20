@@ -51,6 +51,9 @@ retries: {{ cf_tunnel.value.retries }}
 {% if cf_tunnel.value.no_chunked_encoding is defined %}
 no-chunked-encoding: {{ cf_tunnel.value.no_chunked_encoding }}
 {% endif %}
+{% if cf_tunnel.value.edge_ip_version is defined %}
+edge-ip-version: {{ cf_tunnel.value.edge_ip_version }}
+{% endif %}
 {% if (cf_tunnel.value.warp_routing | default(false)) %}
 warp-routing:
   enabled: true
