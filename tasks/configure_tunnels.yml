@@ -41,7 +41,7 @@
 
 - name: Ensure init-v service {{ tunnel_name }} is running
   when: cf_init_system == "initv"
-  ansible.builtin.systemd:
+  ansible.builtin.service:
     name: "{{ systemd_filename }}-{{ tunnel_name }}"
     state: started
     enabled: true

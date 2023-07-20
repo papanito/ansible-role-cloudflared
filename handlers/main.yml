@@ -37,7 +37,7 @@
     enabled: true
 
 - name: Restart init-v service
-  ansible.builtin.systemd:
+  ansible.builtin.service:
     name: "{{ systemd_filename }}-{{ tunnel_name }}"
     state: restarted
     enabled: true
