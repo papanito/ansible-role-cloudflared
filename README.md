@@ -180,8 +180,6 @@ It's recommended to use [named tunnels] for `cf_tunnels` which require [Cloudfla
           - service: http_status:404
 ```
 
-The `key` of the tunnel shall match the of `tunnel_id`.
-
 |Parameter|Description|Default Value|
 |---------|-----------|-------------|
 |`account_tag`|[Mandatory] Account tag from the [credentials file] generated when creating a tunnel|-|
